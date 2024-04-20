@@ -1,15 +1,13 @@
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 
 public class Game extends Canvas implements Runnable {
-
-    public static final int WIDTH = 640, HEIGHT = WIDTH / 12 * 9;
-
     private Thread thread;
     private boolean running = false;
 
     public Game() {
-        new Window(WIDTH, HEIGHT, "Pokemon Game", this);
+        new Window("Pokemon Game", this);
     }
     public synchronized void start() {
         thread = new Thread(this);
@@ -68,7 +66,6 @@ public class Game extends Canvas implements Runnable {
         Graphics g = bs.getDrawGraphics();
 
         g.setColor(Color.BLACK);
-        g.fillRect(0, 0, WIDTH, HEIGHT);
 
         g.dispose();
         bs.show();
