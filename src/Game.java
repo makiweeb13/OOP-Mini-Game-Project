@@ -1,24 +1,36 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
 public class Game extends Canvas implements Runnable {
     private Thread thread;
     private boolean running = false;
+    private BufferedImage backgroundImage;
 
-    public Game() {
+    public Game(){
+        try{
+            // Load the background image
+            backgroundImage = ImageIO.read(new File("TEST/practice.jpg"));
+        }catch(IOException e){
+            e.printStackTrace();
+        }
         new Window("Pokemon Game", this);
     }
+
     public synchronized void start() {
         thread = new Thread(this);
         thread.start();
         running = true;
     }
+
     public synchronized void stop() {
         try {
             thread.join();
             running = false;
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -54,7 +66,7 @@ public class Game extends Canvas implements Runnable {
     }
 
     private void tick() {
-
+        // Game logic update
     }
 
     private void render() {
@@ -65,15 +77,16 @@ public class Game extends Canvas implements Runnable {
         }
         Graphics g = bs.getDrawGraphics();
 
-        g.setColor(Color.BLACK);
+        // Draw the background image
+        g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
 
+        // Release resources
         g.dispose();
         bs.show();
     }
 
     public static void main(String[] args) {
-        System.out.println("Tst1");
+        System.out.println("Start");
         new Game();
     }
-
 }

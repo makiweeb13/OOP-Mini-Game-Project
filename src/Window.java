@@ -1,10 +1,8 @@
 import java.awt.Canvas;
-import java.awt.Dimension;
-
 import javax.swing.JFrame;
 
 public class Window extends Canvas {
-    public Window (java.lang.String title, Game game) {
+    public Window (String title, Game game) {
         JFrame frame = new JFrame(title);
 
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
