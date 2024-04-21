@@ -9,16 +9,21 @@ import javax.imageio.ImageIO;
 public class Game extends Canvas implements Runnable {
     private Thread thread;
     private boolean running = false;
+
+    private Render render;
     private BufferedImage backgroundImage;
 
     public Game(){
         try{
             // Load the background image
             backgroundImage = ImageIO.read(new File("TEST/practice.jpg"));
+
         }catch(IOException e){
             e.printStackTrace();
         }
         new Window("Pokemon Game", this);
+        render = new Render();
+//        render.addObject(new Player(100,100, ID.Player));
     }
 
     public synchronized void start() {
@@ -67,6 +72,7 @@ public class Game extends Canvas implements Runnable {
 
     private void tick() {
         // Game logic update
+        render.tick();
     }
 
     private void render() {
@@ -79,6 +85,9 @@ public class Game extends Canvas implements Runnable {
 
         // Draw the background image
         g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
+
+        //render game object
+        render.render(g);
 
         // Release resources
         g.dispose();
