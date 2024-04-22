@@ -6,7 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
-public class Game extends Canvas implements Runnable{
+public class Game extends Canvas implements Runnable {
     private Thread thread;
     private boolean running = false;
     private Render render;
@@ -15,13 +15,16 @@ public class Game extends Canvas implements Runnable{
 
     public Game() {
         try {
-            backgroundImage = ImageIO.read(new File("TEST/Background.jpg"));
-            logoImage = ImageIO.read(new File("TEST/Logo.png"));
+            backgroundImage = ImageIO.read(new File("resources/images/Background.jpg"));
+            logoImage = ImageIO.read(new File("resources/images/Logo.png"));
         } catch(IOException e) {
             e.printStackTrace();
         }
         new Window("Pokemon Game", this);
         render = new Render();
+
+        //start music
+        Sound.playMusic("resources/bgm/start-bgm.wav");
     }
 
     public synchronized void start(){
@@ -95,7 +98,7 @@ public class Game extends Canvas implements Runnable{
         line 89 - 98 (is the code for creating the button "Press 'ENTER' to start the game".)
          */
         try{ //line 89 - 98 is the code for creating the button "Press 'ENTER' to start the game".
-            BufferedImage startImage = ImageIO.read(new File("TEST/Start.png"));
+            BufferedImage startImage = ImageIO.read(new File("resources/images/Start.png"));
             // line 96 - 97 is to get the dimensions of the loaded image
             int startWidth = startImage.getWidth();
             int startHeight = startImage.getHeight();
@@ -113,7 +116,6 @@ public class Game extends Canvas implements Runnable{
     }
 
     public static void main(String[] args){
-        System.out.println("Start");
         new Game();
     }
 }
