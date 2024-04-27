@@ -12,22 +12,33 @@ public class Game extends Canvas implements Runnable {
     private Render render;
     private BufferedImage backgroundImage;
     private BufferedImage logoImage;
+    private int gameState;
+    private final int titleState = 0;
+    private final int selectionState = 1;
+    private final int battleState = 2;
 
     public Game() {
+
         try {
             backgroundImage = ImageIO.read(new File("resources/images/Background.jpg"));
             logoImage = ImageIO.read(new File("resources/images/Logo.png"));
         } catch(IOException e) {
             e.printStackTrace();
         }
-        new Window("Pokemon Game", this);
+
         render = new Render();
+        this.addKeyListener(new KeyInput(render, this));
+
+        Window titleScreen = new Window("Pokemon Game", this);
+
 
         //start music
-        Sound.playMusic("resources/bgm/start-bgm.wav");
+        Sound.playMusic("resources/bgm/title-screen-bgm.wav");
+
     }
 
     public synchronized void start(){
+        gameState = titleState;
         thread = new Thread(this);
         thread.start();
         running = true;
@@ -63,7 +74,7 @@ public class Game extends Canvas implements Runnable {
 
             if (System.currentTimeMillis() - timer > 1000){
                 timer += 1000;
-                System.out.println("FPS " + frames);
+                //System.out.println("FPS " + frames);
                 frames = 0;
             }
         }
