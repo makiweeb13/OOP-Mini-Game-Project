@@ -93,27 +93,14 @@ public class Game extends Canvas implements Runnable {
 
         if (gameState == titleState) {
             g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
-
         /*
         "Don't remove these comments so that others will know how this code works."
-        Lines 87-91 contain the code for creating the logo, which is the 'Pokémon' logo.
-
-            int desiredWidth = 400;
-            int logoX = getWidth() / 2 - desiredWidth / 2 - 20;
-            int desiredHeight = 400;
-            int logoY = getHeight() / 8 - desiredHeight / 2;
-            //g.drawImage(logoImage, logoX, logoY, desiredWidth, desiredHeight, null);
-
-        /*
-        "Don't remove these comments so that others will know how this code works."
-        line 89 - 98 (is the code for creating the button "Press 'ENTER' to start the game".)
          */
-            try{ //line 89 - 98 is the code for creating the button "Press 'ENTER' to start the game".
+            try{ //is the code for creating the button "Press 'ENTER' to start the game".
                 BufferedImage startImage = ImageIO.read(new File("resources/images/Start.png"));
-                // line 96 - 97 is to get the dimensions of the loaded image
                 int startWidth = startImage.getWidth();
                 int startHeight = startImage.getHeight();
-                // Lines 98-99 calculate the position of the image horizontally and vertically.
+                //this code is to calculate the position of the image horizontally and vertically.
                 int startX = getWidth() / 2 - startWidth / 2;
                 int startY = getHeight() / 2 + ((getHeight() / 2) - startHeight);
                 g.drawImage(startImage, startX, startY, startWidth, startHeight, null);
