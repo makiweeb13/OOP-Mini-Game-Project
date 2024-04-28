@@ -1,6 +1,4 @@
 public class Move {
-}
-public class Move {
     private String moveName;
     private String moveType;
     private int value;
