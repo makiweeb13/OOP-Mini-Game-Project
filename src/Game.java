@@ -121,8 +121,12 @@ public class Game extends Canvas implements Runnable {
                 e.printStackTrace();
             }
         } else if (gameState == selectionState) {
-            g.fillRect(0, 0, getWidth(), getHeight());
-            g.setColor(Color.BLACK);
+            try {
+                backgroundImage = ImageIO.read(new File("resources/images/background2.jpg"));
+            } catch(IOException e) {
+                e.printStackTrace();
+            }
+            g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
         } else if (gameState == battleState) {
             g.fillRect(0, 0, getWidth(), getHeight());
             g.setColor(Color.BLUE);
