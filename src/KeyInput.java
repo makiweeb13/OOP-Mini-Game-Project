@@ -19,7 +19,18 @@ public class KeyInput extends KeyAdapter {
                 game.setGameState(game.getSelectionState());
             }
         }
+        if (key == KeyEvent.VK_RIGHT) {
+            if (game.getSelectionState().selector < 2) {
+                game.getSelectionState().selector += 1;
+            }
+        }
+        if (key == KeyEvent.VK_LEFT) {
+            if (game.getSelectionState().selector > 0) {
+                game.getSelectionState().selector -= 1;
+            }
+        }
     }
+
 
     public void keyReleased(KeyEvent e) {
         // Handle key released event if needed

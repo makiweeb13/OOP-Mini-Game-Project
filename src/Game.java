@@ -2,9 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 
 public class Game extends Canvas implements Runnable {
     private Thread thread;
@@ -14,6 +11,8 @@ public class Game extends Canvas implements Runnable {
     private BufferedImage backgroundImage2;
     private BufferedImage logoImage;
     private BufferedImage startImage;
+
+
     private boolean showStartImage = true;
     private TitleState titleState;
     private SelectionState selectionState;
@@ -50,22 +49,11 @@ public class Game extends Canvas implements Runnable {
         //start music
         Sound.playMusic("resources/bgm/title-screen-bgm.wav");
 
-        try {
-            backgroundImage = ImageIO.read(new File("resources/images/background1.jpg"));
-            backgroundImage2 = ImageIO.read(new File("resources/images/background2.jpg"));
-            logoImage = ImageIO.read(new File("resources/images/Logo.png"));
-            startImage = ImageIO.read(new File("resources/images/Start.png"));
-        } catch(IOException e) {
-            e.printStackTrace();
-        }
 
         titleState = new TitleState(backgroundImage, startImage, true);
 
         selectionState = new SelectionState(backgroundImage2, logoImage);
 
-        // Set initial game state
-        gameState = titleState;
-        System.out.println("titleState: " + titleState);
     }
 
     public synchronized void start(){

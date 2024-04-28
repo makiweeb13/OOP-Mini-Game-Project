@@ -1,8 +1,11 @@
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class TitleState {
     private BufferedImage backgroundImage;
@@ -19,6 +22,13 @@ public class TitleState {
     }
 
     public void render(Graphics g, int width, int height) {
+
+        try {
+            backgroundImage = ImageIO.read(new File("resources/images/background1.jpg"));
+            startImage = ImageIO.read(new File("resources/images/Start.png"));
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
         g.drawImage(backgroundImage, 0, 0, width, height, null);
 
         // Calculate the time elapsed since the last blink
