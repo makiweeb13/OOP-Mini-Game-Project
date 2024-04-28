@@ -12,29 +12,19 @@ public class Game extends Canvas implements Runnable {
     private Render render;
     private BufferedImage backgroundImage;
     private BufferedImage logoImage;
-    private int gameState;
-    private final int titleState = 0;
-    private final int selectionState = 1;
-    private final int battleState = 2;
+    protected int gameState;
+    protected final int titleState = 0;
+    protected final int selectionState = 1;
+    protected final int battleState = 2;
 
     public Game() {
-
-        try {
-            backgroundImage = ImageIO.read(new File("resources/images/Background.jpg"));
-            logoImage = ImageIO.read(new File("resources/images/Logo.png"));
-        } catch(IOException e) {
-            e.printStackTrace();
-        }
-
         render = new Render();
         this.addKeyListener(new KeyInput(render, this));
 
-        Window titleScreen = new Window("Pokemon Game", this);
-
+        new Window("Pokemon Game", this);
 
         //start music
         Sound.playMusic("resources/bgm/title-screen-bgm.wav");
-
     }
 
     public synchronized void start(){
@@ -75,6 +65,7 @@ public class Game extends Canvas implements Runnable {
             if (System.currentTimeMillis() - timer > 1000){
                 timer += 1000;
                 //System.out.println("FPS " + frames);
+                System.out.println(gameState);
                 frames = 0;
             }
         }
@@ -86,39 +77,55 @@ public class Game extends Canvas implements Runnable {
     }
 
     private void render(){
+        try {
+            backgroundImage = ImageIO.read(new File("resources/images/background1.jpg"));
+            logoImage = ImageIO.read(new File("resources/images/Logo.png"));
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+
         BufferStrategy bs = this.getBufferStrategy();
         if (bs == null){
             this.createBufferStrategy(3);
             return;
         }
         Graphics g = bs.getDrawGraphics();
-        g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
+
+        if (gameState == titleState) {
+            g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
 
         /*
         "Don't remove these comments so that others will know how this code works."
         Lines 87-91 contain the code for creating the logo, which is the 'Pokémon' logo.
-        */
-        int desiredWidth = 350;
-        int logoX = getWidth() / 2 - desiredWidth / 2 - 20;
-        int desiredHeight = 350;
-        int logoY = getHeight() / 8 - desiredHeight / 2;
-        g.drawImage(logoImage, logoX, logoY, desiredWidth, desiredHeight, null);
+
+            int desiredWidth = 400;
+            int logoX = getWidth() / 2 - desiredWidth / 2 - 20;
+            int desiredHeight = 400;
+            int logoY = getHeight() / 8 - desiredHeight / 2;
+            //g.drawImage(logoImage, logoX, logoY, desiredWidth, desiredHeight, null);
 
         /*
         "Don't remove these comments so that others will know how this code works."
         line 89 - 98 (is the code for creating the button "Press 'ENTER' to start the game".)
          */
-        try{ //line 89 - 98 is the code for creating the button "Press 'ENTER' to start the game".
-            BufferedImage startImage = ImageIO.read(new File("resources/images/Start.png"));
-            // line 96 - 97 is to get the dimensions of the loaded image
-            int startWidth = startImage.getWidth();
-            int startHeight = startImage.getHeight();
-            // Lines 98-99 calculate the position of the image horizontally and vertically.
-            int startX = getWidth() / 2 - startWidth / 2;
-            int startY = getHeight() / 2 - startHeight / 2;
-            g.drawImage(startImage, startX, startY, startWidth, startHeight, null);
-        } catch(IOException e){
-            e.printStackTrace();
+            try{ //line 89 - 98 is the code for creating the button "Press 'ENTER' to start the game".
+                BufferedImage startImage = ImageIO.read(new File("resources/images/Start.png"));
+                // line 96 - 97 is to get the dimensions of the loaded image
+                int startWidth = startImage.getWidth();
+                int startHeight = startImage.getHeight();
+                // Lines 98-99 calculate the position of the image horizontally and vertically.
+                int startX = getWidth() / 2 - startWidth / 2;
+                int startY = getHeight() / 2 + ((getHeight() / 2) - startHeight);
+                g.drawImage(startImage, startX, startY, startWidth, startHeight, null);
+            } catch(IOException e){
+                e.printStackTrace();
+            }
+        } else if (gameState == selectionState) {
+            g.fillRect(0, 0, getWidth(), getHeight());
+            g.setColor(Color.BLACK);
+        } else if (gameState == battleState) {
+            g.fillRect(0, 0, getWidth(), getHeight());
+            g.setColor(Color.BLUE);
         }
 
         render.render(g);

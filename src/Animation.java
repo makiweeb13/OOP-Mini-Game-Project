@@ -14,10 +14,8 @@ public class Animation {
     private BufferedImage img;
     private boolean imgVisible;
 
-    public Animation(int x, int y, String path) {
-        this.path = path;
-        this.x = x;
-        this.y = y;
+    public Animation() {
+
     }
 
 

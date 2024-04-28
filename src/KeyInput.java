@@ -14,8 +14,9 @@ public class KeyInput extends KeyAdapter {
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
         if (key == KeyEvent.VK_ENTER) {
-            System.out.println("Enter Pressed");
-
+            if (game.gameState == game.titleState) {
+                game.gameState = game.selectionState;
+            }
         }
     }
 
