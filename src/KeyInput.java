@@ -1,9 +1,8 @@
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import javax.swing.JFrame;
+
 
 public class KeyInput extends KeyAdapter {
-
     private Render render;
     private Game game;
 
@@ -11,16 +10,18 @@ public class KeyInput extends KeyAdapter {
         this.render = render;
         this.game = game;
     }
+
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
         if (key == KeyEvent.VK_ENTER) {
-            if (game.gameState == game.titleState) {
-                game.gameState = game.selectionState;
+            // Access gameState, titleState, and selectionState through getter methods
+            if (game.getGameState() == game.getTitleState()) {
+                game.setGameState(game.getSelectionState());
             }
         }
     }
 
     public void keyReleased(KeyEvent e) {
-        int key = e.getKeyCode();
+        // Handle key released event if needed
     }
 }

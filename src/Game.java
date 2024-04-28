@@ -15,10 +15,31 @@ public class Game extends Canvas implements Runnable {
     private BufferedImage logoImage;
     private BufferedImage startImage;
     private boolean showStartImage = true;
-    protected int gameState;
-    protected final int titleState = 0;
-    protected final int selectionState = 1;
-    protected final int battleState = 2;
+    private TitleState titleState;
+    private SelectionState selectionState;
+    private Object gameState;
+    private Object battleState;
+
+
+    // Getter method for gameState
+    public Object getGameState() {
+        return gameState;
+    }
+
+    // Getter method for titleState
+    public TitleState getTitleState() {
+        return titleState;
+    }
+
+    // Getter method for selectionState
+    public SelectionState getSelectionState() {
+        return selectionState;
+    }
+
+    public void setGameState(Object state) {
+        this.gameState = state;
+    }
+
 
     public Game() {
         render = new Render();
@@ -28,6 +49,23 @@ public class Game extends Canvas implements Runnable {
 
         //start music
         Sound.playMusic("resources/bgm/title-screen-bgm.wav");
+
+        try {
+            backgroundImage = ImageIO.read(new File("resources/images/background1.jpg"));
+            backgroundImage2 = ImageIO.read(new File("resources/images/background2.jpg"));
+            logoImage = ImageIO.read(new File("resources/images/Logo.png"));
+            startImage = ImageIO.read(new File("resources/images/Start.png"));
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+
+        titleState = new TitleState(backgroundImage, startImage, true);
+
+        selectionState = new SelectionState(backgroundImage2, logoImage);
+
+        // Set initial game state
+        gameState = titleState;
+        System.out.println("titleState: " + titleState);
     }
 
     public synchronized void start(){
@@ -79,61 +117,21 @@ public class Game extends Canvas implements Runnable {
         render.tick();
     }
 
-    private void render(){
-        try {
-            backgroundImage = ImageIO.read(new File("resources/images/background1.jpg"));
-            backgroundImage2 = ImageIO.read(new File("resources/images/background2.jpg"));
-            logoImage = ImageIO.read(new File("resources/images/Logo.png"));
-            startImage = ImageIO.read(new File("resources/images/Start.png"));
-        } catch(IOException e) {
-            e.printStackTrace();
-        }
-
+    private void render() {
         BufferStrategy bs = this.getBufferStrategy();
-        if (bs == null){
+        if (bs == null) {
             this.createBufferStrategy(3);
             return;
         }
         Graphics g = bs.getDrawGraphics();
 
-        if (gameState == titleState) {
-            g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
-
-        /*
-        "Don't remove these comments so that others will know how this code works."
-         */
-            if (showStartImage) { // Only draw the start image if showStartImage is true
-                int startWidth = startImage.getWidth();
-                int startHeight = startImage.getHeight();
-                int startX = getWidth() / 2 - startWidth / 2;
-                int startY = getHeight() / 2 + ((getHeight() / 2) - startHeight);
-                g.drawImage(startImage, startX, startY, startWidth, startHeight, null);
-            }
-
-        } else if (gameState == selectionState) {
-            g.drawImage(backgroundImage2, 0, 0, getWidth(), getHeight(), null);
-
-            Font font = new Font("Arial", Font.BOLD, 20);
-            g.setFont(font);
-            g.setColor(Color.BLACK);
-            String text = "Choose your";
-            int textX = ((getWidth() - g.getFontMetrics().stringWidth(text)) / 2) - 90;
-            int textY = 50;
-
-            g.drawString(text, textX, textY);
-
-            int logoX = textX + g.getFontMetrics().stringWidth(text) + 10; // Add some padding between the string and the logo
-            int logoY = 0;
-            g.drawImage(logoImage, logoX, logoY, null);
-
+        if (gameState == titleState && titleState != null) { // Use the reference variable titleState for comparison
+            titleState.render(g, getWidth(), getHeight());
+        } else if (gameState == selectionState && selectionState != null) { // Use the reference variable selectionState for comparison
+            selectionState.render(g, getWidth(), getHeight());
         } else if (gameState == battleState) {
-            g.fillRect(0, 0, getWidth(), getHeight());
-            g.setColor(Color.BLUE);
+            // Render battle state
         }
-
-        render.render(g);
-        bs.show();
-        g.dispose();
 
         // Toggle the visibility of the start image every half second
         try {
@@ -142,9 +140,17 @@ public class Game extends Canvas implements Runnable {
             e.printStackTrace();
         }
         showStartImage = !showStartImage; // Toggle the visibility
+
+
+        render.render(g);
+        bs.show();
+        g.dispose();
+
+
     }
 
     public static void main(String[] args){
-        new Game();
+        Game game = new Game(); // Create a Game instance
+        game.start(); // Call the start method
     }
 }
