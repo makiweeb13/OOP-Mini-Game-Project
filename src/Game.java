@@ -14,11 +14,18 @@ public class Game extends Canvas implements Runnable {
     private BufferedImage backgroundImage2;
     private BufferedImage logoImage;
     private BufferedImage startImage;
+
+    private BufferedImage bulba;
+    private BufferedImage chari;
+    private BufferedImage torto;
+    private BufferedImage pokemonBall;
     private boolean showStartImage = true;
     protected int gameState;
     protected final int titleState = 0;
     protected final int selectionState = 1;
     protected final int battleState = 2;
+
+    protected int selector = 1;
 
     public Game() {
         render = new Render();
@@ -82,8 +89,12 @@ public class Game extends Canvas implements Runnable {
         try {
             backgroundImage = ImageIO.read(new File("resources/images/background1.jpg"));
             backgroundImage2 = ImageIO.read(new File("resources/images/background2.jpg"));
+            bulba = ImageIO.read(new File("resources/images/bulba.png"));
+            chari = ImageIO.read(new File("resources/images/chari.png"));
+            torto = ImageIO.read(new File("resources/images/torto.png"));
             logoImage = ImageIO.read(new File("resources/images/Logo.png"));
             startImage = ImageIO.read(new File("resources/images/Start.png"));
+            pokemonBall = ImageIO.read(new File("resources/images/pokemon-ball.png"));
         } catch(IOException e) {
             e.printStackTrace();
         }
@@ -108,39 +119,52 @@ public class Game extends Canvas implements Runnable {
                 int startY = getHeight() / 2 + ((getHeight() / 2) - startHeight);
                 g.drawImage(startImage, startX, startY, startWidth, startHeight, null);
             }
+            // Toggle the visibility of the start image every half second
+            try {
+                Thread.sleep(500); // Sleep for 500 milliseconds (half second)
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            showStartImage = !showStartImage; // Toggle the visibility
 
         } else if (gameState == selectionState) {
+
             g.drawImage(backgroundImage2, 0, 0, getWidth(), getHeight(), null);
 
-            Font font = new Font("Arial", Font.BOLD, 20);
+            Font font = new Font(Font.MONOSPACED, Font.BOLD, 40);
             g.setFont(font);
-            g.setColor(Color.BLACK);
+            g.setColor(Color.black);
             String text = "Choose your";
             int textX = ((getWidth() - g.getFontMetrics().stringWidth(text)) / 2) - 90;
-            int textY = 50;
+            int textY = 60;
 
             g.drawString(text, textX, textY);
 
             int logoX = textX + g.getFontMetrics().stringWidth(text) + 10; // Add some padding between the string and the logo
             int logoY = 0;
+
             g.drawImage(logoImage, logoX, logoY, null);
 
+            g.drawImage(bulba, 90, 240, 290, 290, null);
+            g.drawImage(torto, (getWidth()/2 - torto.getWidth()/2) - 40, 240, 290, 290, null);
+            g.drawImage(chari, getWidth() - 360, 240, 290, 290, null);
+
+            if (selector == 1) {
+                g.drawImage(pokemonBall, getWidth()/2 - 40, getHeight() - 130, 100, 100, null);
+            }
+            if (selector == 0) {
+                g.drawImage(pokemonBall, 200, getHeight() - 140, 100, 100, null);
+            }
+            if (selector == 2) {
+                g.drawImage(pokemonBall, getWidth() - 260, getHeight() - 130, 100, 100, null);
+            }
         } else if (gameState == battleState) {
             g.fillRect(0, 0, getWidth(), getHeight());
             g.setColor(Color.BLUE);
         }
-
         render.render(g);
         bs.show();
         g.dispose();
-
-        // Toggle the visibility of the start image every half second
-        try {
-            Thread.sleep(500); // Sleep for 500 milliseconds (half second)
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        showStartImage = !showStartImage; // Toggle the visibility
     }
 
     public static void main(String[] args){

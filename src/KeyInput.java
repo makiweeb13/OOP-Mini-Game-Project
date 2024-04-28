@@ -18,6 +18,16 @@ public class KeyInput extends KeyAdapter {
                 game.gameState = game.selectionState;
             }
         }
+        if (key == KeyEvent.VK_RIGHT) {
+            if (game.selector < 2) {
+                game.selector += 1;
+            }
+        }
+        if (key == KeyEvent.VK_LEFT) {
+            if (game.selector > 0) {
+                game.selector -= 1;
+            }
+        }
     }
 
     public void keyReleased(KeyEvent e) {
