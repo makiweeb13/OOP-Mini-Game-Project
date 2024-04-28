@@ -17,6 +17,9 @@ public class KeyInput extends KeyAdapter {
             if (game.gameState == game.titleState) {
                 game.gameState = game.selectionState;
             }
+            else if (game.gameState == game.selectionState) {
+                game.gameState = game.battleState;
+            }
         }
         if (key == KeyEvent.VK_RIGHT) {
             if (game.selector < 2) {
