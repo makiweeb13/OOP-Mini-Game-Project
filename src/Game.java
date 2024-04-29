@@ -16,9 +16,10 @@ public class Game extends Canvas implements Runnable {
     private boolean showStartImage = true;
     private TitleState titleState;
     private SelectionState selectionState;
-    private Object gameState;
-    private Object battleState;
 
+
+    private Object gameState;
+    private BattleState battleState;
 
     // Getter method for gameState
     public Object getGameState() {
@@ -35,6 +36,10 @@ public class Game extends Canvas implements Runnable {
         return selectionState;
     }
 
+    public BattleState getBattleState() {
+        return battleState;
+    }
+
     public void setGameState(Object state) {
         this.gameState = state;
     }
@@ -49,15 +54,16 @@ public class Game extends Canvas implements Runnable {
         //start music
         Sound.playMusic("resources/bgm/title-screen-bgm.wav");
 
-
         titleState = new TitleState(backgroundImage, startImage, true);
 
         selectionState = new SelectionState(backgroundImage2, logoImage);
 
+        battleState = new BattleState();
+
+        gameState = titleState;
     }
 
     public synchronized void start(){
-        gameState = titleState;
         thread = new Thread(this);
         thread.start();
         running = true;
@@ -93,8 +99,8 @@ public class Game extends Canvas implements Runnable {
 
             if (System.currentTimeMillis() - timer > 1000){
                 timer += 1000;
-                //System.out.println("FPS " + frames);
-                System.out.println(gameState);
+                System.out.println("FPS " + frames);
+                //System.out.println(gameState);
                 frames = 0;
             }
         }
@@ -117,8 +123,8 @@ public class Game extends Canvas implements Runnable {
             titleState.render(g, getWidth(), getHeight());
         } else if (gameState == selectionState && selectionState != null) { // Use the reference variable selectionState for comparison
             selectionState.render(g, getWidth(), getHeight());
-        } else if (gameState == battleState) {
-            // Render battle state
+        } else if (gameState == battleState && battleState != null) {
+            battleState.render(g, getWidth(), getHeight());
         }
 
         // Toggle the visibility of the start image every half second
@@ -133,12 +139,10 @@ public class Game extends Canvas implements Runnable {
         render.render(g);
         bs.show();
         g.dispose();
-
-
     }
 
     public static void main(String[] args){
         Game game = new Game(); // Create a Game instance
-        game.start(); // Call the start method
+        //game.start(); // Call the start method
     }
 }

@@ -1,9 +1,6 @@
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -12,7 +9,6 @@ public class TitleState {
     private BufferedImage startImage;
     private boolean showStartImage;
     private long lastTime;
-    private long blinkInterval = 500; // Blink interval in milliseconds
 
     public TitleState(BufferedImage backgroundImage, BufferedImage startImage, boolean showStartImage) {
         this.backgroundImage = backgroundImage;
@@ -36,6 +32,8 @@ public class TitleState {
         long elapsedTime = currentTime - lastTime;
 
         // If the elapsed time exceeds the blink interval, toggle the visibility of the start image
+        // Blink interval in milliseconds
+        long blinkInterval = 500;
         if (elapsedTime >= blinkInterval) {
             showStartImage = !showStartImage;
             lastTime = currentTime; // Update the last blink time

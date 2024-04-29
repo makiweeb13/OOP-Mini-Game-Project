@@ -15,8 +15,11 @@ public class KeyInput extends KeyAdapter {
         int key = e.getKeyCode();
         if (key == KeyEvent.VK_ENTER) {
             // Access gameState, titleState, and selectionState through getter methods
-            if (game.getGameState() == game.getTitleState()) {
+            if (game.getGameState().equals(game.getTitleState())) {
                 game.setGameState(game.getSelectionState());
+            }
+            else if (game.getGameState().equals(game.getSelectionState())) {
+                game.setGameState(game.getBattleState());
             }
         }
         if (key == KeyEvent.VK_RIGHT) {
@@ -29,6 +32,7 @@ public class KeyInput extends KeyAdapter {
                 game.getSelectionState().selector -= 1;
             }
         }
+        Sound.playSoundEffect("resources/bgm/button-sound-effect.wav");
     }
 
 
