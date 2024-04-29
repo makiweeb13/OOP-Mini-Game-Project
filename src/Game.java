@@ -89,7 +89,7 @@ public class Game extends Canvas implements Runnable {
             delta += (now - lastTime) / ns;
             lastTime = now;
             while (delta >= 1){
-                //tick();
+                tick();
                 delta--;
             }
             if (running)
@@ -98,7 +98,7 @@ public class Game extends Canvas implements Runnable {
 
             if (System.currentTimeMillis() - timer > 1000){
                 timer += 1000;
-                //System.out.println("FPS " + frames);
+                System.out.println("FPS " + frames);
                 //System.out.println(gameState);
                 frames = 0;
             }
