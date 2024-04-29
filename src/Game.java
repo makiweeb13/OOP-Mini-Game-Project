@@ -59,11 +59,10 @@ public class Game extends Canvas implements Runnable {
         selectionState = new SelectionState(backgroundImage2, logoImage);
 
         battleState = new BattleState();
-
-        gameState = titleState;
     }
 
     public synchronized void start(){
+        gameState = titleState;
         thread = new Thread(this);
         thread.start();
         running = true;
@@ -90,7 +89,7 @@ public class Game extends Canvas implements Runnable {
             delta += (now - lastTime) / ns;
             lastTime = now;
             while (delta >= 1){
-                tick();
+                //tick();
                 delta--;
             }
             if (running)
@@ -99,7 +98,7 @@ public class Game extends Canvas implements Runnable {
 
             if (System.currentTimeMillis() - timer > 1000){
                 timer += 1000;
-                System.out.println("FPS " + frames);
+                //System.out.println("FPS " + frames);
                 //System.out.println(gameState);
                 frames = 0;
             }
@@ -135,7 +134,6 @@ public class Game extends Canvas implements Runnable {
         }
         showStartImage = !showStartImage; // Toggle the visibility
 
-
         render.render(g);
         bs.show();
         g.dispose();
@@ -143,6 +141,6 @@ public class Game extends Canvas implements Runnable {
 
     public static void main(String[] args){
         Game game = new Game(); // Create a Game instance
-        //game.start(); // Call the start method
+        game.start(); // Call the start method
     }
 }
