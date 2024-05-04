@@ -25,7 +25,7 @@ public class KeyInput extends KeyAdapter {
             }
             else  {
                 game.setGameState(game.getBattleState());
-                sound.playMusic("resources/bgm/battle-bgm.wav");
+                //sound.playMusic("resources/bgm/battle-bgm.wav");
             }
         }
         if (key == KeyEvent.VK_RIGHT) {
