@@ -44,15 +44,11 @@ public class Game extends Canvas implements Runnable {
         this.gameState = state;
     }
 
-
     public Game() {
         render = new Render();
         this.addKeyListener(new KeyInput(render, this));
 
         new Window("Pokemon Game", this);
-
-        //start music
-        Sound.playMusic("resources/bgm/title-screen-bgm.wav");
 
         titleState = new TitleState(backgroundImage, startImage, true);
 
@@ -98,8 +94,11 @@ public class Game extends Canvas implements Runnable {
 
             if (System.currentTimeMillis() - timer > 1000){
                 timer += 1000;
+                System.out.println("-----");
                 System.out.println("FPS " + frames);
-                //System.out.println(gameState);
+                System.out.println(gameState);
+                System.out.println("-----");
+
                 frames = 0;
             }
         }
@@ -141,6 +140,6 @@ public class Game extends Canvas implements Runnable {
 
     public static void main(String[] args){
         Game game = new Game(); // Create a Game instance
-        game.start(); // Call the start method
+        game.start(); // start the game
     }
 }

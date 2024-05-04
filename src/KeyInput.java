@@ -4,22 +4,28 @@ import java.awt.event.KeyEvent;
 
 public class KeyInput extends KeyAdapter {
     private Render render;
+    protected Sound sound = new Sound();
     private Game game;
 
     public KeyInput(Render render, Game game) {
         this.render = render;
         this.game = game;
+
+        //start music
+        sound.playMusic("resources/bgm/title-screen-bgm.wav");
+
     }
 
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
         if (key == KeyEvent.VK_ENTER) {
             // Access gameState, titleState, and selectionState through getter methods
-            if (game.getGameState().equals(game.getTitleState())) {
+            if (game.getGameState() == game.getTitleState()) {
                 game.setGameState(game.getSelectionState());
             }
-            else if (game.getGameState().equals(game.getSelectionState())) {
+            else  {
                 game.setGameState(game.getBattleState());
+                sound.playMusic("resources/bgm/battle-bgm.wav");
             }
         }
         if (key == KeyEvent.VK_RIGHT) {
@@ -32,7 +38,7 @@ public class KeyInput extends KeyAdapter {
                 game.getSelectionState().selector -= 1;
             }
         }
-        Sound.playSoundEffect("resources/bgm/button-sound-effect.wav");
+        sound.playSoundEffect("resources/bgm/button-sound-effect.wav");
     }
 
 
