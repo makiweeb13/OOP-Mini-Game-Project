@@ -40,6 +40,10 @@ public class Game extends Canvas implements Runnable {
         return battleState;
     }
 
+    public void setBattleState(BattleState battleState) {
+        this.battleState = battleState;
+    }
+
     public void setGameState(Object state) {
         this.gameState = state;
     }
@@ -53,8 +57,6 @@ public class Game extends Canvas implements Runnable {
         titleState = new TitleState(backgroundImage, startImage, true);
 
         selectionState = new SelectionState(backgroundImage2, logoImage);
-
-        battleState = new BattleState();
     }
 
     public synchronized void start(){

@@ -23,21 +23,80 @@ public class KeyInput extends KeyAdapter {
             if (game.getGameState() == game.getTitleState()) {
                 game.setGameState(game.getSelectionState());
             }
-            else  {
+            else if (game.getGameState() == game.getSelectionState())  {
+                game.setBattleState(new BattleState(game.getSelectionState().selector));
                 game.setGameState(game.getBattleState());
-                //sound.playMusic("resources/bgm/battle-bgm.wav");
+                sound.playMusic("resources/bgm/battle-bgm.wav");
+            }
+            else if (game.getGameState() == game.getBattleState()) {
+                if (game.getBattleState().getActionSelectionMode()) {
+                    game.getBattleState().setActionSelectionMode(false);
+                    game.getBattleState().setFightMode(true);
+                } else if (game.getBattleState().getFightMode()) {
+                    game.getBattleState().setFightMode(false);
+                    game.getBattleState().setCommentMode(true);
+                } else if (game.getBattleState().getCommentMode()) {
+                    game.getBattleState().setCommentMode(false);
+                    game.getBattleState().setEnemyTurn(true);
+                } else if (game.getBattleState().getEnemyTurn()) {
+                    game.getBattleState().setEnemyTurn(false);
+                    game.getBattleState().setActionSelectionMode(true);
+                }
             }
         }
-        if (key == KeyEvent.VK_RIGHT) {
-            if (game.getSelectionState().selector < 2) {
-                game.getSelectionState().selector += 1;
+        if (game.getGameState() == game.getSelectionState()) {
+            if (key == KeyEvent.VK_RIGHT) {
+                if (game.getSelectionState().selector < 2) {
+                    game.getSelectionState().selector += 1;
+                }
+            }
+            if (key == KeyEvent.VK_LEFT) {
+                if (game.getSelectionState().selector > 0) {
+                    game.getSelectionState().selector -= 1;
+                }
             }
         }
-        if (key == KeyEvent.VK_LEFT) {
-            if (game.getSelectionState().selector > 0) {
-                game.getSelectionState().selector -= 1;
+
+        if (game.getGameState() == game.getBattleState()) {
+            Boolean currActionSelectionMode = game.getBattleState().getActionSelectionMode();
+            Boolean currFightMode = game.getBattleState().getFightMode();
+
+            int currActionSelector = game.getBattleState().getActionSelector();
+            int currMoveSelector = game.getBattleState().getMoveSelector();
+
+            if (currActionSelectionMode) {
+                if (key == KeyEvent.VK_LEFT) {
+                    if (currActionSelector > 0) {
+                        game.getBattleState().setActionSelector(currActionSelector - 1);
+                    }
+                }
+                if (key == KeyEvent.VK_RIGHT) {
+                    if (currActionSelector < 1) {
+                        game.getBattleState().setActionSelector(currActionSelector + 1);
+                    }
+                }
+            }
+
+            if (currFightMode) {
+                if (key == KeyEvent.VK_LEFT) {
+                    if (currMoveSelector == 1) game.getBattleState().setMoveSelector(0);
+                    if (currMoveSelector == 3) game.getBattleState().setMoveSelector(2);
+                }
+                if (key == KeyEvent.VK_RIGHT) {
+                    if (currMoveSelector == 0) game.getBattleState().setMoveSelector(1);
+                    if (currMoveSelector == 2) game.getBattleState().setMoveSelector(3);
+                }
+                if (key == KeyEvent.VK_UP) {
+                    if (currMoveSelector == 2) game.getBattleState().setMoveSelector(0);
+                    if (currMoveSelector == 3) game.getBattleState().setMoveSelector(1);
+                }
+                if (key == KeyEvent.VK_DOWN) {
+                    if (currMoveSelector == 0) game.getBattleState().setMoveSelector(2);
+                    if (currMoveSelector == 1) game.getBattleState().setMoveSelector(3);
+                }
             }
         }
+
         sound.playSoundEffect("resources/bgm/button-sound-effect.wav");
     }
 

@@ -1,11 +1,14 @@
+import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+
 public class Pokemon {
     private String pokemonName;
 
     // default stats
-    private final int maxHp = 500;
-    private final int maxPp = 20;
-    private final int atkStat = 50;
-    private final int defStat = 50;
+    private final int MAX_HP = 500;
+    private final int MAX_PP = 20;
+    private final int ATK_STAT = 50;
+    private final int DEF_STAT = 50;
 
     // Keeps track of current stats
     private int currentHp;
@@ -15,13 +18,19 @@ public class Pokemon {
 
     // To store 4 pokemon moves
     private Move[] moves = new Move[4];
+    private int movesCount;
+
+    // pokemon sprite
+    private BufferedImage spriteFront;
+    private BufferedImage spriteBack;
 
     public Pokemon(String name) {
         this.pokemonName = name;
-        this.currentHp = this.maxHp;
-        this.currentPp = this.maxPp;
-        this.currentAtkStat = this.atkStat;
-        this.currentDefStat = this.defStat;
+        this.currentHp = this.MAX_HP;
+        this.currentPp = this.MAX_PP;
+        this.currentAtkStat = this.ATK_STAT;
+        this.currentDefStat = this.DEF_STAT;
+        this.movesCount = 0;
     }
 
     public String getPokemonName() {
@@ -64,14 +73,14 @@ public class Pokemon {
         this.currentDefStat = currentDefStat;
     }
 
-    public Move[] getMoves() {
-        return moves;
+    public Move getMove(int i) {
+        return moves[i];
     }
 
     public void addMove(Move moveToAdd) {
-        int size = moves.length;
-        if (size < 4) {
-            moves[size] = moveToAdd;
+        if (movesCount < 4) {
+            moves[movesCount] = moveToAdd;
+            movesCount++;
         }
     }
 
@@ -83,7 +92,7 @@ public class Pokemon {
                     opponent.setCurrentAtkStat(opponent.getCurrentAtkStat() - move.getValue());
             case "defDeBuff" ->
                     opponent.setCurrentDefStat(opponent.getCurrentDefStat() - move.getValue());
-            case "attackBuff" ->
+            case "atkBuff" ->
                     this.currentAtkStat += 10;
             case "defBuff" ->
                     this.currentDefStat += 10;
