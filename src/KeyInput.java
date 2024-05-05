@@ -29,21 +29,28 @@ public class KeyInput extends KeyAdapter {
                 sound.playMusic("resources/bgm/battle-bgm.wav");
             }
             else if (game.getCurrentScreen() == game.BATTLE) {
+                Pokemon player = game.getBattleState().getChosenPokemon();
+                Pokemon enemy = game.getBattleState().getEnemyPokemon();
+                Move currPlayerMove = player.getMove(game.getBattleState().getMoveSelector());
+
                 if (game.getBattleState().getActionSelectionMode() && game.getBattleState().getActionSelector() == 0) {
                     game.getBattleState().setActionSelectionMode(false);
                     game.getBattleState().setFightMode(true);
                 } else if (game.getBattleState().getFightMode()) {
-                    Pokemon player = game.getBattleState().getChosenPokemon();
-                    Pokemon enemy = game.getBattleState().getEnemyPokemon();
-                    Move currMove = player.getMove(game.getBattleState().getMoveSelector());
-                    player.use(currMove, enemy);
+                    player.use(currPlayerMove, enemy);
                     game.getBattleState().setFightMode(false);
                     game.getBattleState().setCommentMode(true);
                 } else if (game.getBattleState().getCommentMode()) {
                     game.getBattleState().setCommentMode(false);
-                    game.getBattleState().setEnemyTurn(true);
+                    if (player.getCurrentHp() < 0 || enemy.getCurrentHp() < 0) {
+                        game.getBattleState().setFaintedMode(true);
+                    } else {
+                        game.getBattleState().setEnemyTurn(true);
+                    }
                 } else if (game.getBattleState().getEnemyTurn()) {
                     game.getBattleState().setEnemyTurn(false);
+                    Move currEnemyMove = enemy.getMove(game.getBattleState().getRandomMove());
+                    enemy.use(currEnemyMove, player);
                     game.getBattleState().setActionSelectionMode(true);
                 }
             }

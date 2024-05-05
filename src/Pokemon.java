@@ -1,4 +1,3 @@
-import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 
 public class Pokemon {
@@ -37,10 +36,6 @@ public class Pokemon {
         return pokemonName;
     }
 
-    public void setPokemonName(String pokemonName) {
-        this.pokemonName = pokemonName;
-    }
-
     public int getCurrentHp() {
         return currentHp;
     }
@@ -51,10 +46,6 @@ public class Pokemon {
 
     public int getCurrentPp() {
         return currentPp;
-    }
-
-    public void setCurrentPp(int currentPp) {
-        this.currentPp = currentPp;
     }
 
     public int getCurrentAtkStat() {

@@ -14,9 +14,10 @@ public class BattleState {
     private Boolean fightMode;
     private Boolean commentMode;
     private Boolean enemyTurn;
+    private Boolean faintedMode;
     private int moveSelector;
+    private int currEnemyMove;
     private BufferedImage pokemonBall;
-    private final int RANDOM_NUM = (int) (Math.random() * ((3) + 1));
 
     public BattleState(int pokemonID) {
         this.pokemonID = pokemonID;
@@ -26,6 +27,7 @@ public class BattleState {
         this.fightMode = false;
         this.commentMode = false;
         this.enemyTurn = false;
+        this.faintedMode = false;
 
         // Create Pokemon object for chosen pokemon
         if (pokemonID == 0) {
@@ -106,12 +108,26 @@ public class BattleState {
         this.enemyTurn = enemyTurn;
     }
 
+    public Boolean getFaintedMode() {
+        return faintedMode;
+    }
+
+    public void setFaintedMode(Boolean faintedMode) {
+        this.faintedMode = faintedMode;
+    }
+
     public Pokemon getChosenPokemon() {
         return chosenPokemon;
     }
 
     public Pokemon getEnemyPokemon() {
         return enemyPokemon;
+    }
+
+    public int getRandomMove() {
+        int randomNum = (int) (Math.random() * ((3) + 1));
+        this.currEnemyMove = randomNum;
+        return randomNum;
     }
 
     public void render(Graphics g, int width, int height) {
@@ -127,11 +143,11 @@ public class BattleState {
         g.setFont(stat);
 
         g.drawString(enemyPokemon.getPokemonName(), 90, 70);
-        g.drawString("HP " + enemyPokemon.getCurrentHp() + "/" + enemyPokemon.getMAX_HP(), 90, 110);
+        g.drawString("HP " + (Math.max(enemyPokemon.getCurrentHp(), 0)) + "/" + enemyPokemon.getMAX_HP(), 90, 110);
         g.drawString("PP " + enemyPokemon.getCurrentPp() + "/" + enemyPokemon.getMAX_PP(), 340, 110);
 
         g.drawString(chosenPokemon.getPokemonName(), width - 510, height - 300);
-        g.drawString("HP " + chosenPokemon.getCurrentHp() + "/" + chosenPokemon.getMAX_HP(), width - 510, height - 260);
+        g.drawString("HP " + (Math.max(chosenPokemon.getCurrentHp(), 0)) + "/" + chosenPokemon.getMAX_HP(), width - 510, height - 260);
         g.drawString("PP " + chosenPokemon.getCurrentPp() + "/" + chosenPokemon.getMAX_PP(), width - 260, height - 260);
 
         Font font = new Font(Font.MONOSPACED, Font.BOLD, 50);
@@ -170,7 +186,17 @@ public class BattleState {
         }
 
         if (enemyTurn) {
-            g.drawString(enemyPokemon.getPokemonName() + " used " + enemyPokemon.getMove(RANDOM_NUM).getMoveName(), 60, height - 100);
+            g.drawString(enemyPokemon.getPokemonName() + " used " + enemyPokemon.getMove(currEnemyMove).getMoveName(), 60, height - 100);
+        }
+
+        if  (faintedMode) {
+            Pokemon faintedPokemon;
+            if (chosenPokemon.getCurrentHp() < 0) {
+                faintedPokemon = chosenPokemon;
+            } else {
+                faintedPokemon = enemyPokemon;
+            }
+            g.drawString(faintedPokemon.getPokemonName() + " fainted", 60, height - 100);
         }
     }
 
