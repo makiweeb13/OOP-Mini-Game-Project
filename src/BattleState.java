@@ -6,6 +6,7 @@ import java.io.IOException;
 
 public class BattleState {
     private BufferedImage backgroundImage;
+    private BufferedImage pokemonBall;
     private int pokemonID;
     private Pokemon chosenPokemon;
     private Pokemon enemyPokemon;
@@ -17,7 +18,7 @@ public class BattleState {
     private Boolean faintedMode;
     private int moveSelector;
     private int currEnemyMove;
-    private BufferedImage pokemonBall;
+
 
     public BattleState(int pokemonID) {
         this.pokemonID = pokemonID;
@@ -124,9 +125,14 @@ public class BattleState {
         return enemyPokemon;
     }
 
+    public int getCurrEnemyMove() {
+        return currEnemyMove;
+    }
+
     public int getRandomMove() {
         int randomNum = (int) (Math.random() * ((3) + 1));
         this.currEnemyMove = randomNum;
+        System.out.println(randomNum);
         return randomNum;
     }
 
@@ -134,6 +140,19 @@ public class BattleState {
         try {
             backgroundImage = ImageIO.read(new File("resources/images/pokemon-battle-template.png"));
             pokemonBall = ImageIO.read(new File("resources/images/pokemon-ball.png"));
+            enemyPokemon.setSpriteFront(ImageIO.read(new File("resources/images/zubat-front.png")));
+            if (pokemonID == 0) {
+                chosenPokemon.setSpriteFront(ImageIO.read(new File("resources/images/balbausaur-front.png")));
+                chosenPokemon.setSpriteBack(ImageIO.read(new File("resources/images/balbausaur-back.png")));
+            }
+            else if (pokemonID == 1) {
+                chosenPokemon.setSpriteFront(ImageIO.read(new File("resources/images/squirtle-front.png")));
+                chosenPokemon.setSpriteBack(ImageIO.read(new File("resources/images/squirtle-back.png")));
+            }
+            else if (pokemonID == 2) {
+                chosenPokemon.setSpriteFront(ImageIO.read(new File("resources/images/charmander-front.png")));
+                chosenPokemon.setSpriteBack(ImageIO.read(new File("resources/images/charmander-back.png")));
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -149,6 +168,12 @@ public class BattleState {
         g.drawString(chosenPokemon.getPokemonName(), width - 510, height - 300);
         g.drawString("HP " + (Math.max(chosenPokemon.getCurrentHp(), 0)) + "/" + chosenPokemon.getMAX_HP(), width - 510, height - 260);
         g.drawString("PP " + chosenPokemon.getCurrentPp() + "/" + chosenPokemon.getMAX_PP(), width - 260, height - 260);
+
+        // enemy pokemon sprite
+        g.drawImage(enemyPokemon.getSpriteFront(), width - (enemyPokemon.getSpriteFront().getWidth() + 500), 70, 400, 400, null);
+
+        // player pokemon sprite
+        g.drawImage(chosenPokemon.getSpriteBack(), chosenPokemon.getSpriteBack().getWidth(), height - (chosenPokemon.getSpriteBack().getHeight() + 550), 600, 600, null);
 
         Font font = new Font(Font.MONOSPACED, Font.BOLD, 50);
         g.setFont(font);
@@ -182,11 +207,17 @@ public class BattleState {
         }
 
         if (commentMode) {
-            g.drawString(chosenPokemon.getPokemonName() + " used " + chosenPokemon.getMove(moveSelector).getMoveName(), 60, height - 100);
+            if (chosenPokemon.getCurrentPp() >= chosenPokemon.getMove(moveSelector).getPp())
+                g.drawString(chosenPokemon.getPokemonName() + " used " + chosenPokemon.getMove(moveSelector).getMoveName() + "!", 60, height - 100);
+            else
+                g.drawString(chosenPokemon.getPokemonName() + " used " + chosenPokemon.getDefaultMove().getMoveName() + "!", 60, height - 100);
         }
 
         if (enemyTurn) {
-            g.drawString(enemyPokemon.getPokemonName() + " used " + enemyPokemon.getMove(currEnemyMove).getMoveName(), 60, height - 100);
+            if (enemyPokemon.getCurrentPp() >= enemyPokemon.getMove(currEnemyMove).getPp())
+                g.drawString(enemyPokemon.getPokemonName() + " used " + enemyPokemon.getMove(currEnemyMove).getMoveName() + "!", 60, height - 100);
+            else
+                g.drawString(enemyPokemon.getPokemonName() + " used " + enemyPokemon.getDefaultMove().getMoveName() + "!", 60, height - 100);
         }
 
         if  (faintedMode) {

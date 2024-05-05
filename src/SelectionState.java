@@ -71,9 +71,9 @@ public class SelectionState {
             g.drawImage(logoImage, logoX, logoY, null);
         }
 
-        g.drawImage(bulba, 90, 240, 290, 290, null);
-        g.drawImage(torto, (width / 2) - (torto.getWidth() / 2) - imageSpacing, 240, 290, 290, null);
-        g.drawImage(chari, width - 310 - imageSpacing, 240, 290, 290, null);
+        g.drawImage(bulba, 70, 240, 280, 280, null);
+        g.drawImage(torto, (width / 2) - (torto.getWidth() / 2) - imageSpacing, 240, 280, 280, null);
+        g.drawImage(chari, width - 310 - imageSpacing, 240, 280, 280, null);
 
         if (selector == 1) {
             g.drawImage(pokemonBall, (width / 2) - 40, height - 130, 100, 100, null);

@@ -17,6 +17,7 @@ public class Pokemon {
 
     // To store 4 pokemon moves
     private Move[] moves = new Move[4];
+    private Move defaultMove;
     private int movesCount;
 
     // pokemon sprite
@@ -30,6 +31,7 @@ public class Pokemon {
         this.currentAtkStat = this.ATK_STAT;
         this.currentDefStat = this.DEF_STAT;
         this.movesCount = 0;
+        this.defaultMove = new Move("STRUGGLE", "atk", 40, 0);
     }
 
     public String getPokemonName() {
@@ -66,6 +68,26 @@ public class Pokemon {
 
     public Move getMove(int i) {
         return moves[i];
+    }
+
+    public Move getDefaultMove() {
+        return defaultMove;
+    }
+
+    public BufferedImage getSpriteFront() {
+        return spriteFront;
+    }
+
+    public void setSpriteFront(BufferedImage spriteFront) {
+        this.spriteFront = spriteFront;
+    }
+
+    public BufferedImage getSpriteBack() {
+        return spriteBack;
+    }
+
+    public void setSpriteBack(BufferedImage spriteBack) {
+        this.spriteBack = spriteBack;
     }
 
     public int getMAX_HP() {

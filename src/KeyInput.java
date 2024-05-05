@@ -22,36 +22,61 @@ public class KeyInput extends KeyAdapter {
             // Access gameState, titleState, and selectionState through getter methods
             if (game.getCurrentScreen() == game.TITLE) {
                 game.setCurrentScreen(game.SELECTION);
-            }
-            else if (game.getCurrentScreen() == game.SELECTION)  {
+            } else if (game.getCurrentScreen() == game.SELECTION) {
                 game.setBattleState(new BattleState(game.getSelectionState().selector));
                 game.setCurrentScreen(game.BATTLE);
                 sound.playMusic("resources/bgm/battle-bgm.wav");
-            }
-            else if (game.getCurrentScreen() == game.BATTLE) {
+            } else if (game.getCurrentScreen() == game.BATTLE) {
                 Pokemon player = game.getBattleState().getChosenPokemon();
                 Pokemon enemy = game.getBattleState().getEnemyPokemon();
                 Move currPlayerMove = player.getMove(game.getBattleState().getMoveSelector());
+                Move currEnemyMove;
 
-                if (game.getBattleState().getActionSelectionMode() && game.getBattleState().getActionSelector() == 0) {
+                if (game.getBattleState().getFaintedMode()) {
+                    sound.playMusic("resources/bgm/title-screen-bgm.wav");
+                    game.setCurrentScreen(game.TITLE);
+                }
+                if (game.getBattleState().getActionSelectionMode()) {
                     game.getBattleState().setActionSelectionMode(false);
-                    game.getBattleState().setFightMode(true);
+                    if (game.getBattleState().getActionSelector() == 0) {
+                        game.getBattleState().setFightMode(true);
+                    } else {
+                        game.setCurrentScreen(game.TITLE);
+                        sound.playMusic("resources/bgm/title-screen-bgm.wav");
+                    }
                 } else if (game.getBattleState().getFightMode()) {
-                    player.use(currPlayerMove, enemy);
+                    if (player.getCurrentPp() >= currPlayerMove.getPp()) {
+                        player.use(currPlayerMove, enemy);
+                    } else {
+                        player.use(player.getDefaultMove(), enemy);
+                        player.setCurrentHp(player.getCurrentHp() - 40);
+                    }
                     game.getBattleState().setFightMode(false);
                     game.getBattleState().setCommentMode(true);
                 } else if (game.getBattleState().getCommentMode()) {
                     game.getBattleState().setCommentMode(false);
-                    if (player.getCurrentHp() < 0 || enemy.getCurrentHp() < 0) {
+                    if (enemy.getCurrentHp() <= 0) {
                         game.getBattleState().setFaintedMode(true);
+                        sound.playMusic("resources/bgm/victory-theme.wav");
                     } else {
                         game.getBattleState().setEnemyTurn(true);
+                        game.getBattleState().getRandomMove();
                     }
                 } else if (game.getBattleState().getEnemyTurn()) {
                     game.getBattleState().setEnemyTurn(false);
-                    Move currEnemyMove = enemy.getMove(game.getBattleState().getRandomMove());
-                    enemy.use(currEnemyMove, player);
-                    game.getBattleState().setActionSelectionMode(true);
+                    currEnemyMove = enemy.getMove(game.getBattleState().getCurrEnemyMove());
+                    if (enemy.getCurrentPp() >= currEnemyMove.getPp()) {
+                        enemy.use(currEnemyMove, player);
+                    } else {
+                        enemy.use(enemy.getDefaultMove(), player);
+                        enemy.setCurrentHp(enemy.getCurrentHp() - 40);
+                    }
+
+                    if (player.getCurrentHp() <= 0) {
+                        game.getBattleState().setFaintedMode(true);
+                    } else {
+                        game.getBattleState().setActionSelectionMode(true);
+                    }
                 }
             }
         }
