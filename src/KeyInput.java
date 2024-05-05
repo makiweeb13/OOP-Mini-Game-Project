@@ -29,10 +29,14 @@ public class KeyInput extends KeyAdapter {
                 sound.playMusic("resources/bgm/battle-bgm.wav");
             }
             else if (game.getGameState() == game.getBattleState()) {
-                if (game.getBattleState().getActionSelectionMode()) {
+                if (game.getBattleState().getActionSelectionMode() && game.getBattleState().getActionSelector() == 0) {
                     game.getBattleState().setActionSelectionMode(false);
                     game.getBattleState().setFightMode(true);
                 } else if (game.getBattleState().getFightMode()) {
+                    Pokemon player = game.getBattleState().getChosenPokemon();
+                    Pokemon enemy = game.getBattleState().getEnemyPokemon();
+                    Move currMove = player.getMove(game.getBattleState().getMoveSelector());
+                    player.use(currMove, enemy);
                     game.getBattleState().setFightMode(false);
                     game.getBattleState().setCommentMode(true);
                 } else if (game.getBattleState().getCommentMode()) {

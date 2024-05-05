@@ -9,7 +9,6 @@ public class BattleState {
     private int pokemonID;
     private Pokemon chosenPokemon;
     private Pokemon enemyPokemon;
-    private Font font;
     private int actionSelector;
     private Boolean actionSelectionMode;
     private Boolean fightMode;
@@ -18,6 +17,46 @@ public class BattleState {
     private int moveSelector;
     private BufferedImage pokemonBall;
     private final int RANDOM_NUM = (int) (Math.random() * ((3) + 1));
+
+    public BattleState(int pokemonID) {
+        this.pokemonID = pokemonID;
+        this.actionSelector = 0;
+        this.moveSelector = 0;
+        this.actionSelectionMode = true;
+        this.fightMode = false;
+        this.commentMode = false;
+        this.enemyTurn = false;
+
+        // Create Pokemon object for chosen pokemon
+        if (pokemonID == 0) {
+            chosenPokemon = new Pokemon("BALBAUSAUR");
+            chosenPokemon.addMove(new Move("Tackle", "atk", 70, 2));
+            chosenPokemon.addMove(new Move("Growl", "atkBuff", 50, 2));
+            chosenPokemon.addMove(new Move("Vine Whip", "atk", 100, 3));
+            chosenPokemon.addMove(new Move("Solar Beam", "atk", 150, 5));
+        }
+        else if (pokemonID == 1) {
+            chosenPokemon = new Pokemon("SQUIRTLE");
+            chosenPokemon.addMove(new Move("Tackle", "atk", 70, 2));
+            chosenPokemon.addMove(new Move("Tail Whip", "defDeBuff", 50, 2));
+            chosenPokemon.addMove(new Move("Water Gun", "atk", 100, 3));
+            chosenPokemon.addMove(new Move("Hydro Pump", "atk", 150, 5));
+        }
+        else {
+            chosenPokemon = new Pokemon("CHARMANDER");
+            chosenPokemon.addMove(new Move("Scratch", "atk", 70, 2));
+            chosenPokemon.addMove(new Move("Growl", "atkBuff", 50, 2));
+            chosenPokemon.addMove(new Move("Ember", "atk", 100, 3));
+            chosenPokemon.addMove(new Move("Fire Blast", "atk", 150, 5));
+        }
+
+        // Create Pokemon object for enemy pokemon
+        enemyPokemon = new Pokemon("ZUBAT");
+        enemyPokemon.addMove(new Move("Supersonic", "atk", 70, 2));
+        enemyPokemon.addMove(new Move("Screech", "atkDeBuff", 50, 2));
+        enemyPokemon.addMove(new Move("Absorb", "atk", 100, 3));
+        enemyPokemon.addMove(new Move("Mean Look", "defDeBuff", 50, 2));
+    }
 
     public int getActionSelector() {
         return actionSelector;
@@ -67,46 +106,12 @@ public class BattleState {
         this.enemyTurn = enemyTurn;
     }
 
-    public BattleState(int pokemonID) {
-        font = new Font(Font.MONOSPACED, Font.BOLD, 50);
+    public Pokemon getChosenPokemon() {
+        return chosenPokemon;
+    }
 
-        this.pokemonID = pokemonID;
-        this.actionSelector = 0;
-        this.moveSelector = 0;
-        this.actionSelectionMode = true;
-        this.fightMode = false;
-        this.commentMode = false;
-        this.enemyTurn = false;
-
-        // Create Pokemon object for chosen pokemon
-        if (pokemonID == 0) {
-            chosenPokemon = new Pokemon("BALBAUSAUR");
-            chosenPokemon.addMove(new Move("Tackle", "atk", 70, 2));
-            chosenPokemon.addMove(new Move("Growl", "atkBuff", 50, 2));
-            chosenPokemon.addMove(new Move("Vine Whip", "atk", 100, 3));
-            chosenPokemon.addMove(new Move("Solar Beam", "atk", 150, 5));
-        }
-        else if (pokemonID == 1) {
-            chosenPokemon = new Pokemon("SQUIRTLE");
-            chosenPokemon.addMove(new Move("Tackle", "atk", 70, 2));
-            chosenPokemon.addMove(new Move("Tail Whip", "defDeBuff", 50, 2));
-            chosenPokemon.addMove(new Move("Water Gun", "atk", 100, 3));
-            chosenPokemon.addMove(new Move("Hydro Pump", "atk", 150, 5));
-        }
-        else {
-            chosenPokemon = new Pokemon("CHARMANDER");
-            chosenPokemon.addMove(new Move("Scratch", "atk", 70, 2));
-            chosenPokemon.addMove(new Move("Growl", "atkBuff", 50, 2));
-            chosenPokemon.addMove(new Move("Ember", "atk", 100, 3));
-            chosenPokemon.addMove(new Move("Fire Blast", "atk", 150, 5));
-        }
-
-        // Create Pokemon object for enemy pokemon
-        enemyPokemon = new Pokemon("Zubat");
-        enemyPokemon.addMove(new Move("Supersonic", "atk", 70, 2));
-        enemyPokemon.addMove(new Move("Screech", "atkDeBuff", 50, 2));
-        enemyPokemon.addMove(new Move("Absorb", "atk", 100, 3));
-        enemyPokemon.addMove(new Move("Mean Look", "defDeBuff", 50, 2));
+    public Pokemon getEnemyPokemon() {
+        return enemyPokemon;
     }
 
     public void render(Graphics g, int width, int height) {
@@ -117,6 +122,19 @@ public class BattleState {
             e.printStackTrace();
         }
         g.drawImage(backgroundImage, 0, 0, width, height, null);
+
+        Font stat = new Font(Font.MONOSPACED, Font.BOLD, 35);
+        g.setFont(stat);
+
+        g.drawString(enemyPokemon.getPokemonName(), 90, 70);
+        g.drawString("HP " + enemyPokemon.getCurrentHp() + "/" + enemyPokemon.getMAX_HP(), 90, 110);
+        g.drawString("PP " + enemyPokemon.getCurrentPp() + "/" + enemyPokemon.getMAX_PP(), 340, 110);
+
+        g.drawString(chosenPokemon.getPokemonName(), width - 510, height - 300);
+        g.drawString("HP " + chosenPokemon.getCurrentHp() + "/" + chosenPokemon.getMAX_HP(), width - 510, height - 260);
+        g.drawString("PP " + chosenPokemon.getCurrentPp() + "/" + chosenPokemon.getMAX_PP(), width - 260, height - 260);
+
+        Font font = new Font(Font.MONOSPACED, Font.BOLD, 50);
         g.setFont(font);
 
         if (actionSelectionMode) {

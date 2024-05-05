@@ -77,6 +77,14 @@ public class Pokemon {
         return moves[i];
     }
 
+    public int getMAX_HP() {
+        return MAX_HP;
+    }
+
+    public int getMAX_PP() {
+        return MAX_PP;
+    }
+
     public void addMove(Move moveToAdd) {
         if (movesCount < 4) {
             moves[movesCount] = moveToAdd;
