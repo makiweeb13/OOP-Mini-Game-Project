@@ -1,4 +1,3 @@
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
@@ -11,15 +10,26 @@ public class Game extends Canvas implements Runnable {
     private BufferedImage backgroundImage2;
     private BufferedImage logoImage;
     private BufferedImage startImage;
-
-
     private boolean showStartImage = true;
     private TitleState titleState;
     private SelectionState selectionState;
-
-
     private Object gameState;
     private BattleState battleState;
+    protected final int TITLE = 0;
+    protected final int SELECTION = 1;
+    protected final int BATTLE = 2;
+    private int currentScreen;
+
+    public Game() {
+        render = new Render();
+        this.addKeyListener(new KeyInput(render, this));
+
+        new Window("Pokemon Game", this);
+
+        titleState = new TitleState(backgroundImage, startImage, true);
+
+        selectionState = new SelectionState(backgroundImage2, logoImage);
+    }
 
     // Getter method for gameState
     public Object getGameState() {
@@ -39,28 +49,24 @@ public class Game extends Canvas implements Runnable {
     public BattleState getBattleState() {
         return battleState;
     }
-
+    public void setGameState(Object state) {
+        this.gameState = state;
+    }
     public void setBattleState(BattleState battleState) {
         this.battleState = battleState;
     }
 
-    public void setGameState(Object state) {
-        this.gameState = state;
+    public int getCurrentScreen() {
+        return currentScreen;
     }
 
-    public Game() {
-        render = new Render();
-        this.addKeyListener(new KeyInput(render, this));
-
-        new Window("Pokemon Game", this);
-
-        titleState = new TitleState(backgroundImage, startImage, true);
-
-        selectionState = new SelectionState(backgroundImage2, logoImage);
+    public void setCurrentScreen(int currentScreen) {
+        this.currentScreen = currentScreen;
     }
 
     public synchronized void start(){
-        gameState = titleState;
+        //gameState = titleState;
+        currentScreen = TITLE;
         thread = new Thread(this);
         thread.start();
         running = true;
@@ -98,7 +104,6 @@ public class Game extends Canvas implements Runnable {
                 timer += 1000;
                 System.out.println("-----");
                 System.out.println("FPS " + frames);
-                System.out.println(gameState);
                 System.out.println("-----");
 
                 frames = 0;
@@ -119,11 +124,11 @@ public class Game extends Canvas implements Runnable {
         }
         Graphics g = bs.getDrawGraphics();
 
-        if (gameState == titleState && titleState != null) { // Use the reference variable titleState for comparison
+        if (currentScreen == TITLE) {
             titleState.render(g, getWidth(), getHeight());
-        } else if (gameState == selectionState && selectionState != null) { // Use the reference variable selectionState for comparison
+        } else if (currentScreen == SELECTION) {
             selectionState.render(g, getWidth(), getHeight());
-        } else if (gameState == battleState && battleState != null) {
+        } else if (currentScreen == BATTLE) {
             battleState.render(g, getWidth(), getHeight());
         }
 
@@ -142,6 +147,6 @@ public class Game extends Canvas implements Runnable {
 
     public static void main(String[] args){
         Game game = new Game(); // Create a Game instance
-        game.start(); // start the game
+        //game.start(); // start the game
     }
 }

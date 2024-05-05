@@ -20,15 +20,15 @@ public class KeyInput extends KeyAdapter {
         int key = e.getKeyCode();
         if (key == KeyEvent.VK_ENTER) {
             // Access gameState, titleState, and selectionState through getter methods
-            if (game.getGameState() == game.getTitleState()) {
-                game.setGameState(game.getSelectionState());
+            if (game.getCurrentScreen() == game.TITLE) {
+                game.setCurrentScreen(game.SELECTION);
             }
-            else if (game.getGameState() == game.getSelectionState())  {
+            else if (game.getCurrentScreen() == game.SELECTION)  {
                 game.setBattleState(new BattleState(game.getSelectionState().selector));
-                game.setGameState(game.getBattleState());
+                game.setCurrentScreen(game.BATTLE);
                 sound.playMusic("resources/bgm/battle-bgm.wav");
             }
-            else if (game.getGameState() == game.getBattleState()) {
+            else if (game.getCurrentScreen() == game.BATTLE) {
                 if (game.getBattleState().getActionSelectionMode() && game.getBattleState().getActionSelector() == 0) {
                     game.getBattleState().setActionSelectionMode(false);
                     game.getBattleState().setFightMode(true);
@@ -48,7 +48,7 @@ public class KeyInput extends KeyAdapter {
                 }
             }
         }
-        if (game.getGameState() == game.getSelectionState()) {
+        if (game.getCurrentScreen() == game.SELECTION) {
             if (key == KeyEvent.VK_RIGHT) {
                 if (game.getSelectionState().selector < 2) {
                     game.getSelectionState().selector += 1;
@@ -61,7 +61,7 @@ public class KeyInput extends KeyAdapter {
             }
         }
 
-        if (game.getGameState() == game.getBattleState()) {
+        if (game.getCurrentScreen() == game.BATTLE) {
             Boolean currActionSelectionMode = game.getBattleState().getActionSelectionMode();
             Boolean currFightMode = game.getBattleState().getFightMode();
 
