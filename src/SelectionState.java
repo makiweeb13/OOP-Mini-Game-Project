@@ -38,9 +38,9 @@ public class SelectionState {
 
             backgroundImage = ImageIO.read(new File("resources/images/background2.jpg"));
             logoImage = ImageIO.read(new File("resources/images/Logo.png"));
-            bulba = ImageIO.read(new File("resources/images/bulba.png"));
-            chari = ImageIO.read(new File("resources/images/chari.png"));
-            torto = ImageIO.read(new File("resources/images/torto.png"));
+            bulba = ImageIO.read(new File("resources/images/BALBAUSAUR.png"));
+            chari = ImageIO.read(new File("resources/images/CHARMANDER.png"));
+            torto = ImageIO.read(new File("resources/images/SQUIRTLE.png"));
             pokemonBall = ImageIO.read(new File("resources/images/pokemon-ball.png"));
         } catch(IOException e) {
             e.printStackTrace();

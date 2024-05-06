@@ -4,7 +4,7 @@ public class Pokemon {
     private String pokemonName;
 
     // default stats
-    private final int MAX_HP = 500;
+    private final int MAX_HP = 400;
     private final int MAX_PP = 20;
     private final int ATK_STAT = 50;
     private final int DEF_STAT = 50;

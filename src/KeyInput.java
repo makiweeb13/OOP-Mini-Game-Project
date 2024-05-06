@@ -34,15 +34,15 @@ public class KeyInput extends KeyAdapter {
 
                 if (game.getBattleState().getFaintedMode()) {
                     sound.playMusic("resources/bgm/title-screen-bgm.wav");
-                    game.setCurrentScreen(game.TITLE);
+                    game.setCurrentScreen(game.WINNER);
                 }
                 if (game.getBattleState().getActionSelectionMode()) {
                     game.getBattleState().setActionSelectionMode(false);
                     if (game.getBattleState().getActionSelector() == 0) {
                         game.getBattleState().setFightMode(true);
                     } else {
-                        game.setCurrentScreen(game.TITLE);
-                        sound.playMusic("resources/bgm/title-screen-bgm.wav");
+                        game.setCurrentScreen(game.WINNER);
+                        sound.playMusic("resources/bgm/victory-theme.wav");
                     }
                 } else if (game.getBattleState().getFightMode()) {
                     if (player.getCurrentPp() >= currPlayerMove.getPp()) {
@@ -74,10 +74,14 @@ public class KeyInput extends KeyAdapter {
 
                     if (player.getCurrentHp() <= 0) {
                         game.getBattleState().setFaintedMode(true);
+                        sound.playMusic("resources/bgm/victory-theme.wav");
                     } else {
                         game.getBattleState().setActionSelectionMode(true);
                     }
                 }
+            }  else if (game.getCurrentScreen() == game.WINNER) {
+                game.setCurrentScreen(game.TITLE);
+                sound.playMusic("resources/bgm/title-screen-bgm.wav");
             }
         }
         if (game.getCurrentScreen() == game.SELECTION) {

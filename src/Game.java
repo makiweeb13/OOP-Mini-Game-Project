@@ -15,9 +15,11 @@ public class Game extends Canvas implements Runnable {
     private SelectionState selectionState;
     private Object gameState;
     private BattleState battleState;
+    private WinnerState winnerState;
     protected final int TITLE = 0;
     protected final int SELECTION = 1;
     protected final int BATTLE = 2;
+    protected final int WINNER = 3;
     private int currentScreen;
 
     public Game() {
@@ -29,6 +31,8 @@ public class Game extends Canvas implements Runnable {
         titleState = new TitleState(backgroundImage, startImage, true);
 
         selectionState = new SelectionState(backgroundImage2, logoImage);
+
+        winnerState = new WinnerState(backgroundImage);
     }
 
     // Getter method for gameState
@@ -129,6 +133,8 @@ public class Game extends Canvas implements Runnable {
             selectionState.render(g, getWidth(), getHeight());
         } else if (currentScreen == BATTLE) {
             battleState.render(g, getWidth(), getHeight());
+        } else if (currentScreen == WINNER) {
+            winnerState.render(g, getWidth(), getHeight());
         }
 
         // Toggle the visibility of the start image every half second
@@ -145,7 +151,6 @@ public class Game extends Canvas implements Runnable {
     }
 
     public static void main(String[] args){
-        Game game = new Game(); // Create a Game instance
-        //game.start(); // start the game
+        Game game = new Game();
     }
 }
