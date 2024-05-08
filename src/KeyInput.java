@@ -33,16 +33,16 @@ public class KeyInput extends KeyAdapter {
                 Move currEnemyMove;
 
                 if (game.getBattleState().getFaintedMode()) {
-                    sound.playMusic("resources/bgm/title-screen-bgm.wav");
+                    game.getBattleState().setFaintedMode(false);
+
                     game.setCurrentScreen(game.WINNER);
-                }
-                if (game.getBattleState().getActionSelectionMode()) {
+                } else if (game.getBattleState().getActionSelectionMode()) {
                     game.getBattleState().setActionSelectionMode(false);
                     if (game.getBattleState().getActionSelector() == 0) {
                         game.getBattleState().setFightMode(true);
                     } else {
-                        game.setCurrentScreen(game.WINNER);
-                        sound.playMusic("resources/bgm/victory-theme.wav");
+                        game.setCurrentScreen(game.TITLE);
+                        sound.playMusic("resources/bgm/title-screen-bgm.wav");
                     }
                 } else if (game.getBattleState().getFightMode()) {
                     if (player.getCurrentPp() >= currPlayerMove.getPp()) {
@@ -65,6 +65,7 @@ public class KeyInput extends KeyAdapter {
                 } else if (game.getBattleState().getEnemyTurn()) {
                     game.getBattleState().setEnemyTurn(false);
                     currEnemyMove = enemy.getMove(game.getBattleState().getCurrEnemyMove());
+
                     if (enemy.getCurrentPp() >= currEnemyMove.getPp()) {
                         enemy.use(currEnemyMove, player);
                     } else {
@@ -74,9 +75,9 @@ public class KeyInput extends KeyAdapter {
 
                     if (player.getCurrentHp() <= 0) {
                         game.getBattleState().setFaintedMode(true);
-                        sound.playMusic("resources/bgm/victory-theme.wav");
+                        sound.playMusicOnce("resources/bgm/defeat-theme.wav");
                     } else {
-                        game.getBattleState().setActionSelectionMode(true);
+                         game.getBattleState().setActionSelectionMode(true);
                     }
                 }
             }  else if (game.getCurrentScreen() == game.WINNER) {

@@ -134,6 +134,7 @@ public class Game extends Canvas implements Runnable {
         } else if (currentScreen == BATTLE) {
             battleState.render(g, getWidth(), getHeight());
         } else if (currentScreen == WINNER) {
+            winnerState.setWinner(battleState.getWinner());
             winnerState.render(g, getWidth(), getHeight());
         }
 

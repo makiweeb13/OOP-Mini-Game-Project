@@ -18,7 +18,6 @@ public class BattleState {
     private Boolean faintedMode;
     private int moveSelector;
     private int currEnemyMove;
-    private Pokemon winner;
     private boolean gameOver;
 
 
@@ -31,7 +30,7 @@ public class BattleState {
         this.commentMode = false;
         this.enemyTurn = false;
         this.faintedMode = false;
-        gameOver = false;
+        this.gameOver = false;
 
         // Create Pokemon object for chosen pokemon
         if (pokemonID == 0) {
@@ -223,18 +222,14 @@ public class BattleState {
                 g.drawString(enemyPokemon.getPokemonName() + " used " + enemyPokemon.getDefaultMove().getMoveName() + "!", 60, height - 100);
         }
 
-        if  (faintedMode) {
+        if (faintedMode) {
             Pokemon faintedPokemon;
-            if (chosenPokemon.getCurrentHp() < 0) {
+            if (chosenPokemon.getCurrentHp() <= 0) {
                 faintedPokemon = chosenPokemon;
             } else {
                 faintedPokemon = enemyPokemon;
             }
             g.drawString(faintedPokemon.getPokemonName() + " fainted", 60, height - 100);
-        }
-        WinnerState winnerState = getWinnerState();
-        if (winnerState != null) {
-            winnerState.render(g, width, height);
         }
     }
 
@@ -243,15 +238,6 @@ public class BattleState {
             return enemyPokemon; // Enemy wins
         } else if (enemyPokemon.getCurrentHp() <= 0) {
             return chosenPokemon; // Player wins
-        } else {
-            return null; // No winner yet
-        }
-    }
-
-    public WinnerState getWinnerState() {
-        Pokemon winner = getWinner();
-        if (winner != null) {
-            return new WinnerState(winner);
         } else {
             return null; // No winner yet
         }
