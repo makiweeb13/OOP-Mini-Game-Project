@@ -58,7 +58,7 @@ public class BattleState {
         // Create Pokemon object for enemy pokemon
         enemyPokemon = new Pokemon("ZUBAT");
         enemyPokemon.addMove(new Move("Supersonic", "atk", 70, 2));
-        enemyPokemon.addMove(new Move("Screech", "atkDeBuff", 50, 2));
+        enemyPokemon.addMove(new Move("Screech", "atkBuff", 50, 2));
         enemyPokemon.addMove(new Move("Absorb", "atk", 100, 3));
         enemyPokemon.addMove(new Move("Mean Look", "defDeBuff", 50, 2));
     }
