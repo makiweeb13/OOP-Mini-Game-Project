@@ -13,7 +13,6 @@ public class Game extends Canvas implements Runnable {
     private boolean showStartImage = true;
     private TitleState titleState;
     private SelectionState selectionState;
-    private Object gameState;
     private BattleState battleState;
     private WinnerState winnerState;
     protected final int TITLE = 0;
@@ -35,16 +34,6 @@ public class Game extends Canvas implements Runnable {
         winnerState = new WinnerState(backgroundImage);
     }
 
-    // Getter method for gameState
-    public Object getGameState() {
-        return gameState;
-    }
-
-    // Getter method for titleState
-    public TitleState getTitleState() {
-        return titleState;
-    }
-
     // Getter method for selectionState
     public SelectionState getSelectionState() {
         return selectionState;
@@ -52,9 +41,6 @@ public class Game extends Canvas implements Runnable {
 
     public BattleState getBattleState() {
         return battleState;
-    }
-    public void setGameState(Object state) {
-        this.gameState = state;
     }
     public void setBattleState(BattleState battleState) {
         this.battleState = battleState;
@@ -106,9 +92,9 @@ public class Game extends Canvas implements Runnable {
 
             if (System.currentTimeMillis() - timer > 1000){
                 timer += 1000;
-//                System.out.println("-----");
-//                System.out.println("FPS " + frames);
-//                System.out.println("-----");
+                System.out.println("-----");
+                System.out.println("FPS " + frames);
+                System.out.println("-----");
                 frames = 0;
             }
         }
@@ -152,6 +138,6 @@ public class Game extends Canvas implements Runnable {
     }
 
     public static void main(String[] args){
-        Game game = new Game();
+        new Game();
     }
 }
