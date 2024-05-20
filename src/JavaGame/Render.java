@@ -6,15 +6,13 @@ public class Render {
     LinkedList<GameObject> object = new LinkedList<GameObject>();
 
     public void tick() {
-        for(int i = 0; i < object.size(); i++) {
-            GameObject temp = object.get(i);
+        for (GameObject temp : object) {
             temp.tick();
         }
     }
 
     public void render(Graphics g) {
-        for(int i = 0; i < object.size(); i++) {
-            GameObject temp = object.get(i);
+        for (GameObject temp : object) {
             temp.render(g);
         }
     }
