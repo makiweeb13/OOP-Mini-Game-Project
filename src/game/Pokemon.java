@@ -1,4 +1,4 @@
-package JavaGame;
+package game;
 
 import java.awt.image.BufferedImage;
 
