@@ -1,4 +1,4 @@
-package JavaGame;
+package game;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
@@ -17,10 +17,12 @@ public class Game extends Canvas implements Runnable {
     private SelectionState selectionState;
     private BattleState battleState;
     private WinnerState winnerState;
+    private TriviaState triviaState; // Added TriviaState
     protected final int TITLE = 0;
     protected final int SELECTION = 1;
     protected final int BATTLE = 2;
     protected final int WINNER = 3;
+    protected final int TRIVIA = 4; // Added TRIVIA state
     private int currentScreen;
 
     public Game() {
@@ -30,10 +32,9 @@ public class Game extends Canvas implements Runnable {
         new Window("POKEMON: Defeat Zubat!", this);
 
         titleState = new TitleState(backgroundImage, startImage, true);
-
         selectionState = new SelectionState(backgroundImage2, logoImage);
-
         winnerState = new WinnerState(backgroundImage);
+        triviaState = new TriviaState(this); // Initialized TriviaState
     }
 
     // Getter method for selectionState
@@ -124,6 +125,8 @@ public class Game extends Canvas implements Runnable {
         } else if (currentScreen == WINNER) {
             winnerState.setWinner(battleState.getWinner());
             winnerState.render(g, getWidth(), getHeight());
+        } else if (currentScreen == TRIVIA) { // Added TRIVIA state
+            triviaState.render(g, getWidth(), getHeight()); // Render triviaState
         }
 
         // Toggle the visibility of the start image every half second
@@ -140,6 +143,6 @@ public class Game extends Canvas implements Runnable {
     }
 
     public static void main(String[] args){
-        new Game();
+        new Game().start();
     }
 }
