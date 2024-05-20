@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Pokemon Game:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Pokemon_Game_jar</output-path>
+    <root id="archive" name="Pokemon Game.jar">
+      <element id="module-output" name="Pokemon Game" />
+    </root>
+  </artifact>
+</component>
