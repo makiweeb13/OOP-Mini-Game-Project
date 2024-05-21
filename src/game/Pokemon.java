@@ -152,14 +152,10 @@ public class Pokemon {
         }
 
         // enable moves unlocked by current level
-        System.out.println("----");
         for (int i = 1; i < this.currentLvl && i < 4; i++) {
             moves[i].setDisabled(false);
-
-            System.out.println(i + " < " + this.currentLvl);
             System.out.println(moves[i].isDisabled());
 
         }
-        System.out.println("----");
     }
 }

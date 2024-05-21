@@ -48,7 +48,6 @@ public class Game extends Canvas implements Runnable {
     public void setBattleState(BattleState battleState) {
         this.battleState = battleState;
     }
-
     public int getCurrentScreen() {
         return currentScreen;
     }
