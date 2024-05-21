@@ -19,26 +19,31 @@ public class KeyInput extends KeyAdapter {
     }
 
     public void keyPressed(KeyEvent e) {
+
         int key = e.getKeyCode();
         if (key == KeyEvent.VK_ENTER) {
             // Access gameState, titleState, and selectionState through getter methods
             if (game.getCurrentScreen() == game.TITLE) {
                 game.setCurrentScreen(game.SELECTION);
-            } else if (game.getCurrentScreen() == game.SELECTION) {
+            }
+            else if (game.getCurrentScreen() == game.SELECTION) {
                 game.setBattleState(new BattleState(game.getSelectionState().selector));
                 game.setCurrentScreen(game.BATTLE);
                 sound.playMusic("src/resources/bgm/battle-bgm.wav");
-            } else if (game.getCurrentScreen() == game.BATTLE) {
+            }
+            else if (game.getCurrentScreen() == game.BATTLE) {
                 Pokemon player = game.getBattleState().getChosenPokemon();
                 Pokemon enemy = game.getBattleState().getEnemyPokemon();
                 Move currPlayerMove = player.getMove(game.getBattleState().getMoveSelector());
                 Move currEnemyMove;
 
+                // Battle flow
                 if (game.getBattleState().getFaintedMode()) {
                     game.getBattleState().setFaintedMode(false);
 
                     game.setCurrentScreen(game.WINNER);
-                } else if (game.getBattleState().getActionSelectionMode()) {
+                }
+                else if (game.getBattleState().getActionSelectionMode()) {
                     game.getBattleState().setActionSelectionMode(false);
                     if (game.getBattleState().getActionSelector() == 0) {
                         game.getBattleState().setFightMode(true);
@@ -50,7 +55,8 @@ public class KeyInput extends KeyAdapter {
                         game.setCurrentScreen(game.TITLE);
                         sound.playMusic("src/resources/bgm/title-screen-bgm.wav");
                     }
-                } else if (game.getBattleState().getFightMode()) {
+                }
+                else if (game.getBattleState().getFightMode()) {
                     if (player.getCurrentPp() >= currPlayerMove.getPp()) {
                         player.use(currPlayerMove, enemy);
                     } else {
@@ -59,7 +65,8 @@ public class KeyInput extends KeyAdapter {
                     }
                     game.getBattleState().setFightMode(false);
                     game.getBattleState().setCommentMode(true);
-                } else if (game.getBattleState().getCommentMode()) {
+                }
+                else if (game.getBattleState().getCommentMode()) {
                     game.getBattleState().setCommentMode(false);
                     if (enemy.getCurrentHp() <= 0) {
                         game.getBattleState().setFaintedMode(true);
@@ -68,13 +75,15 @@ public class KeyInput extends KeyAdapter {
                         game.getBattleState().setEnemyTurn(true);
                         game.getBattleState().getRandomMove();
                     }
-                } else if (game.getBattleState().getEnemyTurn()) {
+                }
+                else if (game.getBattleState().getEnemyTurn()) {
                     game.getBattleState().setEnemyTurn(false);
                     currEnemyMove = enemy.getMove(game.getBattleState().getCurrEnemyMove());
 
                     if (enemy.getCurrentPp() >= currEnemyMove.getPp()) {
                         enemy.use(currEnemyMove, player);
-                    } else {
+                    }
+                    else {
                         enemy.use(enemy.getDefaultMove(), player);
                         enemy.setCurrentHp(enemy.getCurrentHp() - 40);
                     }
@@ -82,14 +91,17 @@ public class KeyInput extends KeyAdapter {
                     if (player.getCurrentHp() <= 0) {
                         game.getBattleState().setFaintedMode(true);
                         sound.playMusicOnce("src/resources/bgm/defeat-theme.wav");
-                    } else {
+                    }
+                    else {
                          game.getBattleState().setActionSelectionMode(true);
                     }
                 }
-            } else if (game.getCurrentScreen() == game.WINNER) {
+            }
+            else if (game.getCurrentScreen() == game.WINNER) {
                 game.setCurrentScreen(game.TITLE);
                 sound.playMusic("src/resources/bgm/title-screen-bgm.wav");
-            } else if (game.getCurrentScreen() == game.TRIVIA) {
+            }
+            else if (game.getCurrentScreen() == game.TRIVIA) {
 
             }
         }
@@ -138,21 +150,38 @@ public class KeyInput extends KeyAdapter {
             }
 
             if (currFightMode) {
+                Pokemon pokemon = game.getBattleState().getChosenPokemon();
                 if (key == KeyEvent.VK_LEFT) {
-                    if (currMoveSelector == 1) game.getBattleState().setMoveSelector(0);
-                    if (currMoveSelector == 3) game.getBattleState().setMoveSelector(2);
+                    if ((currMoveSelector == 1 || currMoveSelector == 3) && !pokemon.getMove(currMoveSelector - 1).isDisabled()) {
+                        game.getBattleState().setMoveSelector(currMoveSelector - 1);
+                    }
+//                    if (currMoveSelector == 1) {
+//                        game.getBattleState().setMoveSelector(0);
+//                    }
+//                    if (currMoveSelector == 3) {
+//                        game.getBattleState().setMoveSelector(2);
+//                    }
                 }
                 if (key == KeyEvent.VK_RIGHT) {
-                    if (currMoveSelector == 0) game.getBattleState().setMoveSelector(1);
-                    if (currMoveSelector == 2) game.getBattleState().setMoveSelector(3);
+                    if ((currMoveSelector == 0 || currMoveSelector == 2) && !pokemon.getMove(currMoveSelector + 1).isDisabled()) {
+                        game.getBattleState().setMoveSelector(currMoveSelector + 1);
+                    }
+//                    if (currMoveSelector == 0) game.getBattleState().setMoveSelector(1);
+//                    if (currMoveSelector == 2) game.getBattleState().setMoveSelector(3);
                 }
                 if (key == KeyEvent.VK_UP) {
-                    if (currMoveSelector == 2) game.getBattleState().setMoveSelector(0);
-                    if (currMoveSelector == 3) game.getBattleState().setMoveSelector(1);
+                    if ((currMoveSelector == 2 || currMoveSelector == 3) && !pokemon.getMove(currMoveSelector - 2).isDisabled()) {
+                        game.getBattleState().setMoveSelector(currMoveSelector - 2);
+                    }
+//                    if (currMoveSelector == 2) game.getBattleState().setMoveSelector(0);
+//                    if (currMoveSelector == 3) game.getBattleState().setMoveSelector(1);
                 }
                 if (key == KeyEvent.VK_DOWN) {
-                    if (currMoveSelector == 0) game.getBattleState().setMoveSelector(2);
-                    if (currMoveSelector == 1) game.getBattleState().setMoveSelector(3);
+                    if ((currMoveSelector == 0 || currMoveSelector == 1) && !pokemon.getMove(currMoveSelector + 2).isDisabled()) {
+                        game.getBattleState().setMoveSelector(currMoveSelector + 2);
+                    }
+//                    if (currMoveSelector == 0) game.getBattleState().setMoveSelector(2);
+//                    if (currMoveSelector == 1) game.getBattleState().setMoveSelector(3);
                 }
             }
         }

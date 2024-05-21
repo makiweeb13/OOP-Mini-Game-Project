@@ -31,35 +31,37 @@ public class BattleState implements State {
         this.enemyTurn = false;
         this.faintedMode = false;
 
-        // Create Pokemon object for chosen pokemon
+        // Create pokemon object for chosen pokemon
         if (pokemonID == 0) {
             chosenPokemon = new Pokemon("BALBAUSAUR");
-            chosenPokemon.addMove(new Move("Tackle", "atk", 70, 2));
-            chosenPokemon.addMove(new Move("Growl", "atkBuff", 50, 2));
-            chosenPokemon.addMove(new Move("Vine Whip", "atk", 100, 3));
-            chosenPokemon.addMove(new Move("Solar Beam", "atk", 150, 5));
+            chosenPokemon.addMove(new Move("Tackle", "atk", 70, 2, 200));
+            chosenPokemon.addMove(new Move("Growl", "atkBuff", 50, 2, 200));
+            chosenPokemon.addMove(new Move("Vine Whip", "atk", 100, 3, 300));
+            chosenPokemon.addMove(new Move("Solar Beam", "atk", 150, 5, 500));
         }
         else if (pokemonID == 1) {
             chosenPokemon = new Pokemon("SQUIRTLE");
-            chosenPokemon.addMove(new Move("Tackle", "atk", 70, 2));
-            chosenPokemon.addMove(new Move("Tail Whip", "defDeBuff", 50, 2));
-            chosenPokemon.addMove(new Move("Water Gun", "atk", 100, 3));
-            chosenPokemon.addMove(new Move("Hydro Pump", "atk", 150, 5));
+            chosenPokemon.addMove(new Move("Tackle", "atk", 70, 2, 200));
+            chosenPokemon.addMove(new Move("Tail Whip", "defDeBuff", 50, 2, 200));
+            chosenPokemon.addMove(new Move("Water Gun", "atk", 100, 3, 300));
+            chosenPokemon.addMove(new Move("Hydro Pump", "atk", 150, 5, 500));
         }
         else {
             chosenPokemon = new Pokemon("CHARMANDER");
-            chosenPokemon.addMove(new Move("Scratch", "atk", 70, 2));
-            chosenPokemon.addMove(new Move("Growl", "atkBuff", 50, 2));
-            chosenPokemon.addMove(new Move("Ember", "atk", 100, 3));
-            chosenPokemon.addMove(new Move("Fire Blast", "atk", 150, 5));
+            chosenPokemon.addMove(new Move("Scratch", "atk", 70, 2, 200));
+            chosenPokemon.addMove(new Move("Growl", "atkBuff", 50, 2, 200));
+            chosenPokemon.addMove(new Move("Ember", "atk", 100, 3, 300));
+            chosenPokemon.addMove(new Move("Fire Blast", "atk", 150, 5, 500));
         }
+        // enable first move
+        chosenPokemon.getMove(0).setDisabled(false);
 
         // Create Pokemon object for enemy pokemon
         enemyPokemon = new Pokemon("ZUBAT");
-        enemyPokemon.addMove(new Move("Supersonic", "atk", 70, 2));
-        enemyPokemon.addMove(new Move("Screech", "atkBuff", 50, 2));
-        enemyPokemon.addMove(new Move("Absorb", "atk", 100, 3));
-        enemyPokemon.addMove(new Move("Mean Look", "defDeBuff", 50, 2));
+        enemyPokemon.addMove(new Move("Supersonic", "atk", 70, 2, 200));
+        enemyPokemon.addMove(new Move("Screech", "atkBuff", 50, 2, 200));
+        enemyPokemon.addMove(new Move("Absorb", "atk", 100, 3, 300));
+        enemyPokemon.addMove(new Move("Mean Look", "defDeBuff", 50, 2, 500));
     }
 
     public int getActionSelector() {
@@ -162,13 +164,15 @@ public class BattleState implements State {
         Font stat = new Font(Font.MONOSPACED, Font.BOLD, 35);
         g.setFont(stat);
 
-        g.drawString(enemyPokemon.getPokemonName(), 90, 70);
+        // display enemy pokemon info
+        g.drawString("LVL " + enemyPokemon.getLevel() + ": " + enemyPokemon.getPokemonName(), 90, 70);
         g.drawString("HP " + (Math.max(enemyPokemon.getCurrentHp(), 0)) + "/" + enemyPokemon.getMAX_HP(), 90, 110);
-        g.drawString("PP " + enemyPokemon.getCurrentPp() + "/" + enemyPokemon.getMAX_PP(), 340, 110);
+        g.drawString("PP " + enemyPokemon.getCurrentPp() + "/" + enemyPokemon.getMAX_PP(), 360, 110);
 
-        g.drawString(chosenPokemon.getPokemonName(), width - 510, height - 300);
+        // display chosen pokemon info
+        g.drawString("LVL " + chosenPokemon.getLevel() + ": " + chosenPokemon.getPokemonName(), width - 510, height - 300);
         g.drawString("HP " + (Math.max(chosenPokemon.getCurrentHp(), 0)) + "/" + chosenPokemon.getMAX_HP(), width - 510, height - 260);
-        g.drawString("PP " + chosenPokemon.getCurrentPp() + "/" + chosenPokemon.getMAX_PP(), width - 260, height - 260);
+        g.drawString("PP " + chosenPokemon.getCurrentPp() + "/" + chosenPokemon.getMAX_PP(), width - 240, height - 260);
 
         // enemy pokemon sprite
         g.drawImage(enemyPokemon.getSpriteFront(), width - (enemyPokemon.getSpriteFront().getWidth() + 500), 70, 400, 400, null);
@@ -195,19 +199,35 @@ public class BattleState implements State {
             g.drawString("RUN", width - 330, height - 50);
         }
         if (fightMode) {
-            if (moveSelector == 0) {
-                g.drawImage(pokemonBall, 50, height - 160, 35, 35, null);
-            } else if (moveSelector == 1) {
-                g.drawImage(pokemonBall, 450, height - 160, 35, 35, null);
-            } else if (moveSelector == 2) {
-                g.drawImage(pokemonBall, 50, height - 100, 35, 35, null);
-            } else if (moveSelector == 3) {
-                g.drawImage(pokemonBall, 450, height - 100, 35, 35, null);
+            // select only if move is enabled
+            if (!chosenPokemon.getMove(moveSelector).isDisabled()) {
+                if (moveSelector == 0) {
+                    g.drawImage(pokemonBall, 50, height - 160, 35, 35, null);
+                }
+                else if (moveSelector == 1) {
+                    g.drawImage(pokemonBall, 450, height - 160, 35, 35, null);
+                }
+                else if (moveSelector == 2) {
+                    g.drawImage(pokemonBall, 50, height - 100, 35, 35, null);
+                }
+                else if (moveSelector == 3) {
+                    g.drawImage(pokemonBall, 450, height - 100, 35, 35, null);
+                }
             }
-            g.drawString(chosenPokemon.getMove(0).getMoveName(), 100, height - 130);
-            g.drawString(chosenPokemon.getMove(1).getMoveName(), 500, height - 130);
-            g.drawString(chosenPokemon.getMove(2).getMoveName(), 100, height - 70);
-            g.drawString(chosenPokemon.getMove(3).getMoveName(), 500, height - 70);
+
+            // display only if move is enabled
+            if (!chosenPokemon.getMove(0).isDisabled()) {
+                g.drawString(chosenPokemon.getMove(0).getMoveName(), 100, height - 130);
+            }
+            if (!chosenPokemon.getMove(1).isDisabled()) {
+                g.drawString(chosenPokemon.getMove(1).getMoveName(), 500, height - 130);
+            }
+            if (!chosenPokemon.getMove(2).isDisabled()) {
+                g.drawString(chosenPokemon.getMove(2).getMoveName(), 100, height - 70);
+            }
+            if (!chosenPokemon.getMove(3).isDisabled()) {
+                g.drawString(chosenPokemon.getMove(3).getMoveName(), 500, height - 70);
+            }
             g.drawString("Choose a move", width - 500, height - 100);
         }
 
@@ -239,9 +259,11 @@ public class BattleState implements State {
     public Pokemon getWinner() {
         if (chosenPokemon.getCurrentHp() <= 0) {
             return enemyPokemon; // Enemy wins
-        } else if (enemyPokemon.getCurrentHp() <= 0) {
+        }
+        else if (enemyPokemon.getCurrentHp() <= 0) {
             return chosenPokemon; // Player wins
-        } else {
+        }
+        else {
             return null; // No winner yet
         }
     }
