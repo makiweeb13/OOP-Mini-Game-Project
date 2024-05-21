@@ -39,12 +39,7 @@ public class TriviaState implements State{
             g.drawString("Press Enter to reveal the answer", 50, 150);
         }
     }
-    public void keyPressed(KeyEvent e){
-        int key = e.getKeyCode();
-        if (key == KeyEvent.VK_ENTER){
-            showAnswer = !showAnswer;
-        }
-    }
+
     @Override
     public String toString(){
         return "TriviaState";

@@ -42,7 +42,11 @@ public class KeyInput extends KeyAdapter {
                     game.getBattleState().setActionSelectionMode(false);
                     if (game.getBattleState().getActionSelector() == 0) {
                         game.getBattleState().setFightMode(true);
-                    } else {
+                    }
+                    else if (game.getBattleState().getActionSelector() == 1) {
+                        game.setCurrentScreen(game.TRIVIA);
+                    }
+                    else if (game.getBattleState().getActionSelector() == 2) {
                         game.setCurrentScreen(game.TITLE);
                         sound.playMusic("src/resources/bgm/title-screen-bgm.wav");
                     }
@@ -82,9 +86,11 @@ public class KeyInput extends KeyAdapter {
                          game.getBattleState().setActionSelectionMode(true);
                     }
                 }
-            }  else if (game.getCurrentScreen() == game.WINNER) {
+            } else if (game.getCurrentScreen() == game.WINNER) {
                 game.setCurrentScreen(game.TITLE);
                 sound.playMusic("src/resources/bgm/title-screen-bgm.wav");
+            } else if (game.getCurrentScreen() == game.TRIVIA) {
+
             }
         }
         if (game.getCurrentScreen() == game.SELECTION) {
@@ -116,6 +122,17 @@ public class KeyInput extends KeyAdapter {
                 if (key == KeyEvent.VK_RIGHT) {
                     if (currActionSelector < 1) {
                         game.getBattleState().setActionSelector(currActionSelector + 1);
+                    }
+                }
+                if (key == KeyEvent.VK_DOWN) {
+                    if (currActionSelector <= 1 && currActionSelector >= 0) {
+                        game.getBattleState().setActionSelector(2);
+                    }
+                }
+
+                if (key == KeyEvent.VK_UP) {
+                    if (currActionSelector == 2) {
+                        game.getBattleState().setActionSelector(0);
                     }
                 }
             }

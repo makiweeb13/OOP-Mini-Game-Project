@@ -182,13 +182,17 @@ public class BattleState implements State {
         if (actionSelectionMode) {
             g.drawString("What should " + chosenPokemon.getPokemonName() + " do?", 60, height - 100);
             if (actionSelector == 0) {
-                g.drawImage(pokemonBall, width - 510, height - 130, 35, 35, null);
+                g.drawImage(pokemonBall, width - 530, height - 160, 35, 35, null);
             }
-            g.drawString("FIGHT", width - 460, height - 100);
+            g.drawString("FIGHT", width - 480, height - 130);
             if (actionSelector == 1) {
-                g.drawImage(pokemonBall, width - 260, height - 130, 35, 35, null);
+                g.drawImage(pokemonBall, width - 290, height - 160, 35, 35, null);
             }
-            g.drawString("RUN", width - 210, height - 100);
+            g.drawString("TRIVIA", width - 240, height - 130);
+            if (actionSelector == 2) {
+                g.drawImage(pokemonBall, width - 380, height - 80, 35, 35, null);
+            }
+            g.drawString("RUN", width - 330, height - 50);
         }
         if (fightMode) {
             if (moveSelector == 0) {
