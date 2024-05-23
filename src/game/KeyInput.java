@@ -186,6 +186,22 @@ public class KeyInput extends KeyAdapter {
             }
         }
 
+        if (game.getCurrentScreen() == game.TRIVIA) {
+            TriviaState triviaState = game.getTriviaState();
+            if (key == KeyEvent.VK_UP) {
+                triviaState.moveUp();
+            } else if (key == KeyEvent.VK_DOWN) {
+                triviaState.moveDown();
+            } else if (key == KeyEvent.VK_LEFT) {
+                triviaState.moveLeft();
+            } else if (key == KeyEvent.VK_RIGHT) {
+                triviaState.moveRight();
+            }
+        }
+
+
+
+
         sound.playSoundEffect("src/resources/bgm/button-sound-effect.wav");
     }
 
