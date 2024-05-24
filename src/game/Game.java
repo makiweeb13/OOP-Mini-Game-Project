@@ -107,6 +107,10 @@ public class Game extends Canvas implements Runnable {
         render.tick();
     }
 
+    public TriviaState getTriviaState() {
+        return triviaState;
+    }
+
     private void render() {
         BufferStrategy bs = this.getBufferStrategy();
         if (bs == null) {

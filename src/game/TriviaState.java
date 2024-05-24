@@ -1,5 +1,7 @@
 package game;
 
+import java.util.Random;
+import java.util.Arrays;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -9,79 +11,132 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
-public class TriviaState implements State{
+public class TriviaState implements State {
     private Game game;
-    private String[] questions;
-    private String[][] choices;
-    private String[] correctAnswers;
+    private Question[] questions;
     private int currentQuestionIndex;
     private boolean showAnswer;
     private BufferedImage backgroundImage;
+    private BufferedImage pokeballImage;
 
-    public TriviaState(Game game){
+    private int selectedChoiceIndex;
+
+    public TriviaState(Game game) {
         this.game = game;
-        this.questions = new String[]{
-                "Yeah",
-        };
-        this.choices = new String[][]{
-                {"Prog1", "Prog2", "DSA", "Shift"}
-        };
-        this.correctAnswers = new String[]{
-                "C. Shift"
+        this.questions = new Question[]{
+                new Question("What type is Pikachu?", new String[]{"Water", "Electric", "Fire", "Grass"}, "Electric"),
+                new Question("Which Pokémon evolves into Charizard?", new String[]{"Squirtle", "Bulbasaur", "Charmander", "Pikachu"}, "Charmander"),
+                new Question("What Pokémon is also known as the 'Shellfish Pokémon'?", new String[]{"Squirtle", "Slowpoke", "Cloyster", "Krabby"}, "Squirtle"),
+                new Question("Which Pokémon is known as the 'Fire Mouse'?", new String[]{"Pikachu", "Charmander", "Jigglypuff", "Magikarp"}, "Charmander"),
+                new Question("What is the first Pokémon in the Pokédex?", new String[]{"Bulbasaur", "Pikachu", "Rattata", "Charmander"}, "Bulbasaur"),
+                new Question("What Pokémon type is effective against Ground type moves?", new String[]{"Electric", "Flying", "Water", "Grass"}, "Electric"),
+                new Question("Which Pokémon has the Pokédex number 007?", new String[]{"Squirtle", "Charmander", "Bulbasaur", "Wartortle"}, "Wartortle"),
+                new Question("What is the final evolution of Eevee when exposed to a Water Stone?", new String[]{"Vaporeon", "Jolteon", "Flareon", "Espeon"}, "Vaporeon"),
+                new Question("Which Pokémon is the only one to have been designed by an American artist?", new String[]{"Pikachu", "Jynx", "Ditto", "Mew"}, "Jynx"),
+                new Question("What Pokémon is known as the 'Tiny Bird Pokémon'?", new String[]{"Pidgey", "Spearow", "Fearow", "Farfetch'd"}, "Pidgey")
         };
         this.currentQuestionIndex = 0;
         this.showAnswer = false;
+        this.selectedChoiceIndex = 0;
+        shuffleQuestions();
 
-        try{
+        try {
             backgroundImage = ImageIO.read(new File("src/resources/images/Trivia.jpg"));
-        }catch(IOException e){
+            pokeballImage = ImageIO.read(new File("src/resources/images/pokemon-ball.png"));
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    private void shuffleQuestions() {
+        Random random = new Random();
+        for (int i = questions.length - 1; i > 0; i--) {
+            int index = random.nextInt(i + 1);
+            Question temp = questions[index];
+            questions[index] = questions[i];
+            questions[i] = temp;
+        }
+    }
+
+
     @Override
-    public void render(Graphics g, int width, int height){
-        if(backgroundImage != null){
+    public void render(Graphics g, int width, int height) {
+        if (backgroundImage != null) {
             g.drawImage(backgroundImage, 0, 0, width, height, null);
-        }else{
+        } else {
             g.setColor(Color.WHITE);
             g.fillRect(0, 0, width, height);
         }
         g.setColor(Color.WHITE);
-        g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 20));
+        g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 30));
         FontMetrics fm = g.getFontMetrics();
 
         String title = "Trivia Time!";
         int titleX = (width - fm.stringWidth(title)) / 2;
         g.drawString(title, titleX, 50);
 
-        String question = "Question: " + questions[currentQuestionIndex];
+        String question = questions[currentQuestionIndex].getQuestion();
         int questionX = (width - fm.stringWidth(question)) / 2;
         int questionY = 300;
         g.drawString(question, questionX, questionY);
 
-        int choiceYStart = questionY + 195;
+        String[] choices = questions[currentQuestionIndex].getChoices();
+
+        int choiceYStart = questionY + 200;
         int choiceSpacing = 120;
-        int choiceColumnOffset1 = 1220;
-        int choiceColumnOffset = 550;
+        int choiceColumnOffset1 = 1020;
+        int choiceColumnOffset = 350;
+        int pokeballWidth = 40;
+        int pokeballHeight = 40;
+        int pokeballOffsetX = -42;
+        int pokeballOffsetY = 12;
 
+        for (int i = 0; i < choices.length; i++) {
+            int choiceY = choiceYStart + (i / 2) * choiceSpacing;
+            int choiceX = (i % 2 == 0) ? (width - choiceColumnOffset1 - fm.stringWidth(choices[i]))
+                    : (width - choiceColumnOffset - fm.stringWidth(choices[i]));
+            g.drawString(choices[i], choiceX, choiceY);
 
-        g.drawString(choices[currentQuestionIndex][0], width - choiceColumnOffset1 - fm.stringWidth(choices[currentQuestionIndex][1]), choiceYStart);
-        g.drawString(choices[currentQuestionIndex][2], width - choiceColumnOffset1 - fm.stringWidth(choices[currentQuestionIndex][3]), choiceYStart + choiceSpacing);
+            if (i == selectedChoiceIndex) {
+                g.drawImage(pokeballImage, choiceX + pokeballOffsetX, choiceY - pokeballHeight / 2 - pokeballOffsetY, pokeballWidth, pokeballHeight, null);
+            }
+        }
 
-        g.drawString(choices[currentQuestionIndex][1], width - choiceColumnOffset - fm.stringWidth(choices[currentQuestionIndex][1]), choiceYStart);
-        g.drawString(choices[currentQuestionIndex][3], width - choiceColumnOffset - fm.stringWidth(choices[currentQuestionIndex][3]), choiceYStart + choiceSpacing);
-
-        if(showAnswer){
-            String answer = "Answer: " + correctAnswers[currentQuestionIndex];
+        if (showAnswer) {
+            String answer = "Answer: " + questions[currentQuestionIndex].getCorrectAnswer();
             int answerX = (width - fm.stringWidth(answer)) / 2;
             g.drawString(answer, answerX, choiceYStart + 2 * choiceSpacing + 50);
-        }else{
+        } else {
             String prompt = "Press Enter to reveal the answer";
             int promptX = (width - fm.stringWidth(prompt)) / 2;
             g.drawString(prompt, promptX, choiceYStart + 2 * choiceSpacing + 50);
         }
     }
+
+    public void moveUp() {
+        if (selectedChoiceIndex >= 2) {
+            selectedChoiceIndex -= 2;
+        }
+    }
+
+    public void moveDown() {
+        if (selectedChoiceIndex + 2 < questions[currentQuestionIndex].getChoices().length) {
+            selectedChoiceIndex += 2;
+        }
+    }
+
+    public void moveLeft() {
+        if (selectedChoiceIndex % 2 != 0) {
+            selectedChoiceIndex--;
+        }
+    }
+
+    public void moveRight() {
+        if (selectedChoiceIndex % 2 == 0 && selectedChoiceIndex + 1 < questions[currentQuestionIndex].getChoices().length) {
+            selectedChoiceIndex++;
+        }
+    }
+
     @Override
     public String toString() {
         return "TriviaState";
