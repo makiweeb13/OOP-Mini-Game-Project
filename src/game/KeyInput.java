@@ -40,7 +40,6 @@ public class KeyInput extends KeyAdapter {
                 // Battle flow
                 if (game.getBattleState().getFaintedMode()) {
                     game.getBattleState().setFaintedMode(false);
-
                     game.setCurrentScreen(game.WINNER);
                 }
                 else if (game.getBattleState().getActionSelectionMode()) {
@@ -49,7 +48,12 @@ public class KeyInput extends KeyAdapter {
                         game.getBattleState().setFightMode(true);
                     }
                     else if (game.getBattleState().getActionSelector() == 1) {
-                        game.setCurrentScreen(game.TRIVIA);
+                        if (game.getTriviaState().isDisabled()) {
+                            game.getBattleState().setDisabledTriviaMode(true);
+                        } else {
+                            game.setCurrentScreen(game.TRIVIA);
+                            game.getTriviaState().setDisabled(true);
+                        }
                     }
                     else if (game.getBattleState().getActionSelector() == 2) {
                         game.setCurrentScreen(game.TITLE);
@@ -96,13 +100,34 @@ public class KeyInput extends KeyAdapter {
                          game.getBattleState().setActionSelectionMode(true);
                     }
                 }
+                else if (game.getBattleState().getDisabledTriviaMode()) {
+                    game.getBattleState().setDisabledTriviaMode(false);
+                    game.getBattleState().setActionSelectionMode(true);
+                }
+
             }
             else if (game.getCurrentScreen() == game.WINNER) {
                 game.setCurrentScreen(game.TITLE);
                 sound.playMusic("src/resources/bgm/title-screen-bgm.wav");
             }
             else if (game.getCurrentScreen() == game.TRIVIA) {
-
+                TriviaState trivia = game.getTriviaState();
+                if (trivia.isAnsweredMode()) {
+                    game.setCurrentScreen(game.BATTLE);
+                    game.getBattleState().setActionSelectionMode(true);
+                    trivia.setShowAnswer(false);
+                    trivia.setAnsweredMode(false);
+                } else {
+                    String selectedAnswer = trivia.getQuestions()[trivia.getSelectedChoiceIndex()].getCorrectAnswer();
+                    String answer = trivia.getQuestions()[trivia.getCurrentQuestionIndex()].getCorrectAnswer();
+                    trivia.setAnsweredMode(true);
+                    trivia.setShowAnswer(true);
+                    if (selectedAnswer.equals(answer)) {
+                        Pokemon pokemon = game.getBattleState().getChosenPokemon();
+                        pokemon.setExp(pokemon.getExp() + 500); // adds 500 exp points if trivia answered correctly
+                        pokemon.setLevel(pokemon.getLevel() + 1); // levels up pokemon
+                    }
+                }
             }
         }
         if (game.getCurrentScreen() == game.SELECTION) {

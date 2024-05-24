@@ -18,6 +18,7 @@ public class BattleState implements State {
     private Boolean commentMode;
     private Boolean enemyTurn;
     private Boolean faintedMode;
+    private Boolean disabledTriviaMode;
     private int moveSelector;
     private int currEnemyMove;
 
@@ -30,6 +31,7 @@ public class BattleState implements State {
         this.commentMode = false;
         this.enemyTurn = false;
         this.faintedMode = false;
+        this.disabledTriviaMode = false;
 
         // Create pokemon object for chosen pokemon
         if (pokemonID == 0) {
@@ -120,6 +122,14 @@ public class BattleState implements State {
         this.faintedMode = faintedMode;
     }
 
+    public Boolean getDisabledTriviaMode() {
+        return disabledTriviaMode;
+    }
+
+    public void setDisabledTriviaMode(Boolean disabledTriviaMode) {
+        this.disabledTriviaMode = disabledTriviaMode;
+    }
+
     public Pokemon getChosenPokemon() {
         return chosenPokemon;
     }
@@ -194,9 +204,9 @@ public class BattleState implements State {
             }
             g.drawString("TRIVIA", width - 240, height - 130);
             if (actionSelector == 2) {
-                g.drawImage(pokemonBall, width - 380, height - 80, 35, 35, null);
+                g.drawImage(pokemonBall, width - 530, height - 80, 35, 35, null);
             }
-            g.drawString("RUN", width - 330, height - 50);
+            g.drawString("RUN", width - 480, height - 50);
         }
         if (fightMode) {
             // select only if move is enabled
@@ -253,6 +263,10 @@ public class BattleState implements State {
                 faintedPokemon = enemyPokemon;
             }
             g.drawString(faintedPokemon.getPokemonName() + " fainted", 60, height - 100);
+        }
+
+        if (disabledTriviaMode) {
+            g.drawString("Can only use TRIVIA once", 60, height - 100);
         }
     }
 

@@ -21,16 +21,19 @@ public class TriviaState implements State {
 
     private int selectedChoiceIndex;
 
+    private boolean answeredMode;
+    private boolean disabled; // disables trivia after being used once
+
     public TriviaState(Game game) {
         this.game = game;
         this.questions = new Question[]{
                 new Question("What type is Pikachu?", new String[]{"Water", "Electric", "Fire", "Grass"}, "Electric"),
                 new Question("Which Pokémon evolves into Charizard?", new String[]{"Squirtle", "Bulbasaur", "Charmander", "Pikachu"}, "Charmander"),
-                new Question("What Pokémon is also known as the 'Shellfish Pokémon'?", new String[]{"Squirtle", "Slowpoke", "Cloyster", "Krabby"}, "Squirtle"),
-                new Question("Which Pokémon is known as the 'Fire Mouse'?", new String[]{"Pikachu", "Charmander", "Jigglypuff", "Magikarp"}, "Charmander"),
+                new Question("Which Pokémon is also known as the 'Shellfish Pokémon'?", new String[]{"Squirtle", "Slowpoke", "Cloyster", "Krabby"}, "Squirtle"),
+                new Question("Which Pokémon is known as the 'Fire Mouse'?", new String[]{"Pikachu", "Charmander", "Jigglypuff", "Cyndaquil"}, "Cyndaquil"),
                 new Question("What is the first Pokémon in the Pokédex?", new String[]{"Bulbasaur", "Pikachu", "Rattata", "Charmander"}, "Bulbasaur"),
-                new Question("What Pokémon type is effective against Ground type moves?", new String[]{"Electric", "Flying", "Water", "Grass"}, "Electric"),
-                new Question("Which Pokémon has the Pokédex number 007?", new String[]{"Squirtle", "Charmander", "Bulbasaur", "Wartortle"}, "Wartortle"),
+                new Question("What Pokémon type is effective against Ground type moves?", new String[]{"Electric", "Flying", "Water", "Grass"}, "Water"),
+                new Question("Which Pokémon has the Pokédex number 007?", new String[]{"Squirtle", "Charmander", "Bulbasaur", "Wartortle"}, "Squirtle"),
                 new Question("What is the final evolution of Eevee when exposed to a Water Stone?", new String[]{"Vaporeon", "Jolteon", "Flareon", "Espeon"}, "Vaporeon"),
                 new Question("Which Pokémon is the only one to have been designed by an American artist?", new String[]{"Pikachu", "Jynx", "Ditto", "Mew"}, "Jynx"),
                 new Question("What Pokémon is known as the 'Tiny Bird Pokémon'?", new String[]{"Pidgey", "Spearow", "Fearow", "Farfetch'd"}, "Pidgey")
@@ -38,6 +41,8 @@ public class TriviaState implements State {
         this.currentQuestionIndex = 0;
         this.showAnswer = false;
         this.selectedChoiceIndex = 0;
+        this.answeredMode = false;
+        this.disabled = false;
         shuffleQuestions();
 
         try {
@@ -135,6 +140,38 @@ public class TriviaState implements State {
         if (selectedChoiceIndex % 2 == 0 && selectedChoiceIndex + 1 < questions[currentQuestionIndex].getChoices().length) {
             selectedChoiceIndex++;
         }
+    }
+
+    public boolean isAnsweredMode() {
+        return answeredMode;
+    }
+
+    public void setAnsweredMode(boolean answeredMode) {
+        this.answeredMode = answeredMode;
+    }
+
+    public void setShowAnswer(boolean showAnswer) {
+        this.showAnswer = showAnswer;
+    }
+
+    public boolean isDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
+    }
+
+    public Question[] getQuestions() {
+        return questions;
+    }
+
+    public int getSelectedChoiceIndex() {
+        return selectedChoiceIndex;
+    }
+
+    public int getCurrentQuestionIndex() {
+        return currentQuestionIndex;
     }
 
     @Override
