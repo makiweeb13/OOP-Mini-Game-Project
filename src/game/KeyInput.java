@@ -155,33 +155,21 @@ public class KeyInput extends KeyAdapter {
                     if ((currMoveSelector == 1 || currMoveSelector == 3) && !pokemon.getMove(currMoveSelector - 1).isDisabled()) {
                         game.getBattleState().setMoveSelector(currMoveSelector - 1);
                     }
-//                    if (currMoveSelector == 1) {
-//                        game.getBattleState().setMoveSelector(0);
-//                    }
-//                    if (currMoveSelector == 3) {
-//                        game.getBattleState().setMoveSelector(2);
-//                    }
                 }
                 if (key == KeyEvent.VK_RIGHT) {
                     if ((currMoveSelector == 0 || currMoveSelector == 2) && !pokemon.getMove(currMoveSelector + 1).isDisabled()) {
                         game.getBattleState().setMoveSelector(currMoveSelector + 1);
                     }
-//                    if (currMoveSelector == 0) game.getBattleState().setMoveSelector(1);
-//                    if (currMoveSelector == 2) game.getBattleState().setMoveSelector(3);
                 }
                 if (key == KeyEvent.VK_UP) {
                     if ((currMoveSelector == 2 || currMoveSelector == 3) && !pokemon.getMove(currMoveSelector - 2).isDisabled()) {
                         game.getBattleState().setMoveSelector(currMoveSelector - 2);
                     }
-//                    if (currMoveSelector == 2) game.getBattleState().setMoveSelector(0);
-//                    if (currMoveSelector == 3) game.getBattleState().setMoveSelector(1);
                 }
                 if (key == KeyEvent.VK_DOWN) {
                     if ((currMoveSelector == 0 || currMoveSelector == 1) && !pokemon.getMove(currMoveSelector + 2).isDisabled()) {
                         game.getBattleState().setMoveSelector(currMoveSelector + 2);
                     }
-//                    if (currMoveSelector == 0) game.getBattleState().setMoveSelector(2);
-//                    if (currMoveSelector == 1) game.getBattleState().setMoveSelector(3);
                 }
             }
         }
