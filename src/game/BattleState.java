@@ -9,7 +9,7 @@ import java.io.IOException;
 public class BattleState implements State {
     private BufferedImage backgroundImage;
     private BufferedImage pokemonBall;
-    private int pokemonID;
+    private int selectedPokemon;
     private Pokemon chosenPokemon;
     private Pokemon enemyPokemon;
     private int actionSelector;
@@ -19,11 +19,12 @@ public class BattleState implements State {
     private Boolean enemyTurn;
     private Boolean faintedMode;
     private Boolean disabledTriviaMode;
+    private Boolean saveMode;
     private int moveSelector;
     private int currEnemyMove;
 
-    public BattleState(int pokemonID) {
-        this.pokemonID = pokemonID;
+    public BattleState(int selectedPokemon) {
+        this.selectedPokemon = selectedPokemon;
         this.actionSelector = 0;
         this.moveSelector = 0;
         this.actionSelectionMode = true;
@@ -32,17 +33,20 @@ public class BattleState implements State {
         this.enemyTurn = false;
         this.faintedMode = false;
         this.disabledTriviaMode = false;
+        this.saveMode = false;
 
         // Create pokemon object for chosen pokemon
-        if (pokemonID == 0) {
+        if (selectedPokemon == 0) {
             chosenPokemon = new Pokemon("BALBAUSAUR");
+            chosenPokemon.setPokemonID(0);
             chosenPokemon.addMove(new Move("Tackle", "atk", 70, 2, 200));
             chosenPokemon.addMove(new Move("Growl", "atkBuff", 50, 2, 200));
             chosenPokemon.addMove(new Move("Vine Whip", "atk", 100, 3, 300));
             chosenPokemon.addMove(new Move("Solar Beam", "atk", 150, 5, 500));
         }
-        else if (pokemonID == 1) {
+        else if (selectedPokemon == 1) {
             chosenPokemon = new Pokemon("SQUIRTLE");
+            chosenPokemon.setPokemonID(1);
             chosenPokemon.addMove(new Move("Tackle", "atk", 70, 2, 200));
             chosenPokemon.addMove(new Move("Tail Whip", "defDeBuff", 50, 2, 200));
             chosenPokemon.addMove(new Move("Water Gun", "atk", 100, 3, 300));
@@ -50,6 +54,7 @@ public class BattleState implements State {
         }
         else {
             chosenPokemon = new Pokemon("CHARMANDER");
+            chosenPokemon.setPokemonID(3);
             chosenPokemon.addMove(new Move("Scratch", "atk", 70, 2, 200));
             chosenPokemon.addMove(new Move("Growl", "atkBuff", 50, 2, 200));
             chosenPokemon.addMove(new Move("Ember", "atk", 100, 3, 300));
@@ -64,6 +69,18 @@ public class BattleState implements State {
         enemyPokemon.addMove(new Move("Screech", "atkBuff", 50, 2, 200));
         enemyPokemon.addMove(new Move("Absorb", "atk", 100, 3, 300));
         enemyPokemon.addMove(new Move("Mean Look", "defDeBuff", 50, 2, 500));
+    }
+
+    public BattleState() {
+        this.actionSelector = 0;
+        this.moveSelector = 0;
+        this.actionSelectionMode = true;
+        this.fightMode = false;
+        this.commentMode = false;
+        this.enemyTurn = false;
+        this.faintedMode = false;
+        this.disabledTriviaMode = false;
+        this.saveMode = false;
     }
 
     public int getActionSelector() {
@@ -134,37 +151,54 @@ public class BattleState implements State {
         return chosenPokemon;
     }
 
+    public void setSelectedPokemon(int selectedPokemon) {
+        this.selectedPokemon = selectedPokemon;
+    }
+
+    public void setChosenPokemon(Pokemon chosenPokemon) {
+        this.chosenPokemon = chosenPokemon;
+    }
+
     public Pokemon getEnemyPokemon() {
         return enemyPokemon;
+    }
+
+    public void setEnemyPokemon(Pokemon enemyPokemon) {
+        this.enemyPokemon = enemyPokemon;
     }
 
     public int getCurrEnemyMove() {
         return currEnemyMove;
     }
 
-    public int getRandomMove() {
-        int randomNum = (int) (Math.random() * ((3) + 1));
-        this.currEnemyMove = randomNum;
-        System.out.println(randomNum);
-        return randomNum;
+    public Boolean getSaveMode() {
+        return saveMode;
+    }
+
+    public void setSaveMode(Boolean saveMode) {
+        this.saveMode = saveMode;
+    }
+
+    public void getRandomMove() {
+        this.currEnemyMove = (int) (Math.random() * ((3) + 1));
     }
 
     public void render(Graphics g, int width, int height) {
         try {
-            backgroundImage = ImageIO.read(new File("src/resources/images/pokemon-battle-template.png"));
-            pokemonBall = ImageIO.read(new File("src/resources/images/pokemon-ball.png"));
-            enemyPokemon.setSpriteFront(ImageIO.read(new File("src/resources/images/zubat-front.png")));
-            if (pokemonID == 0) {
-                chosenPokemon.setSpriteFront(ImageIO.read(new File("src/resources/images/balbausaur-front.png")));
-                chosenPokemon.setSpriteBack(ImageIO.read(new File("src/resources/images/balbausaur-back.png")));
+            backgroundImage = ImageIO.read(new File("res/images/pokemon-battle-template.png"));
+            pokemonBall = ImageIO.read(new File("res/images/pokemon-ball.png"));
+            enemyPokemon.setSpriteFront(ImageIO.read(new File("res/images/zubat-front.png")));
+            if (selectedPokemon == 0) {
+                chosenPokemon.setSpriteFront(ImageIO.read(new File("res/images/balbausaur-front.png")));
+                chosenPokemon.setSpriteBack(ImageIO.read(new File("res/images/balbausaur-back.png")));
             }
-            else if (pokemonID == 1) {
-                chosenPokemon.setSpriteFront(ImageIO.read(new File("src/resources/images/squirtle-front.png")));
-                chosenPokemon.setSpriteBack(ImageIO.read(new File("src/resources/images/squirtle-back.png")));
+            else if (selectedPokemon == 1) {
+                chosenPokemon.setSpriteFront(ImageIO.read(new File("res/images/squirtle-front.png")));
+                chosenPokemon.setSpriteBack(ImageIO.read(new File("res/images/squirtle-back.png")));
             }
-            else if (pokemonID == 2) {
-                chosenPokemon.setSpriteFront(ImageIO.read(new File("src/resources/images/charmander-front.png")));
-                chosenPokemon.setSpriteBack(ImageIO.read(new File("src/resources/images/charmander-back.png")));
+            else if (selectedPokemon == 2) {
+                chosenPokemon.setSpriteFront(ImageIO.read(new File("res/images/charmander-front.png")));
+                chosenPokemon.setSpriteBack(ImageIO.read(new File("res/images/charmander-back.png")));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -206,7 +240,11 @@ public class BattleState implements State {
             if (actionSelector == 2) {
                 g.drawImage(pokemonBall, width - 530, height - 80, 35, 35, null);
             }
-            g.drawString("RUN", width - 480, height - 50);
+            g.drawString("SAVE", width - 480, height - 50);
+            if (actionSelector == 3) {
+                g.drawImage(pokemonBall, width - 290, height - 80, 35, 35, null);
+            }
+            g.drawString("RUN", width - 240, height - 50);
         }
         if (fightMode) {
             // select only if move is enabled
@@ -267,6 +305,10 @@ public class BattleState implements State {
 
         if (disabledTriviaMode) {
             g.drawString("Can only use TRIVIA once", 60, height - 100);
+        }
+
+        if (saveMode) {
+            g.drawString("Progress saved successfully", 60, height - 100);
         }
     }
 

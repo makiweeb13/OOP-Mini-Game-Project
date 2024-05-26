@@ -3,9 +3,9 @@ package game;
 public class Question {
     private String question;
     private String[] choices;
-    private String correctAnswer;
+    private int correctAnswer;
 
-    public Question(String question, String[] choices, String correctAnswer) {
+    public Question(String question, String[] choices, int correctAnswer) {
         this.question = question;
         this.choices = choices;
         this.correctAnswer = correctAnswer;
@@ -19,7 +19,7 @@ public class Question {
         return choices;
     }
 
-    public String getCorrectAnswer() {
+    public int getCorrectAnswer() {
         return correctAnswer;
     }
 }

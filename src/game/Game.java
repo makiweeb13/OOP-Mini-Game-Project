@@ -18,6 +18,7 @@ public class Game extends Canvas implements Runnable {
     private BattleState battleState;
     private WinnerState winnerState;
     private TriviaState triviaState; // Added TriviaState
+    private Progress saved;
     protected final int TITLE = 0;
     protected final int SELECTION = 1;
     protected final int BATTLE = 2;
@@ -37,11 +38,13 @@ public class Game extends Canvas implements Runnable {
         triviaState = new TriviaState(this); // Initialized TriviaState
     }
 
-    // Getter method for selectionState
+    // Getter method for
+    public TitleState getTitleState() {
+        return titleState;
+    }
     public SelectionState getSelectionState() {
         return selectionState;
     }
-
     public BattleState getBattleState() {
         return battleState;
     }
@@ -51,9 +54,17 @@ public class Game extends Canvas implements Runnable {
     public int getCurrentScreen() {
         return currentScreen;
     }
-
+    public TriviaState getTriviaState() {
+        return triviaState;
+    }
     public void setCurrentScreen(int currentScreen) {
         this.currentScreen = currentScreen;
+    }
+    public Progress getSaved() {
+        return saved;
+    }
+    public void setSaved(Progress saved) {
+        this.saved = saved;
     }
 
     public synchronized void start(){
@@ -94,9 +105,9 @@ public class Game extends Canvas implements Runnable {
 
             if (System.currentTimeMillis() - timer > 1000){
                 timer += 1000;
-//                System.out.println("-----");
-//                System.out.println("FPS " + frames);
-//                System.out.println("-----");
+                System.out.println("-----");
+                System.out.println("FPS " + frames);
+                System.out.println("-----");
                 frames = 0;
             }
         }
@@ -105,10 +116,6 @@ public class Game extends Canvas implements Runnable {
 
     private void tick(){
         render.tick();
-    }
-
-    public TriviaState getTriviaState() {
-        return triviaState;
     }
 
     private void render() {

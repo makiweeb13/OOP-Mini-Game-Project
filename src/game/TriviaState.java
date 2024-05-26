@@ -27,16 +27,16 @@ public class TriviaState implements State {
     public TriviaState(Game game) {
         this.game = game;
         this.questions = new Question[]{
-                new Question("What type is Pikachu?", new String[]{"Water", "Electric", "Fire", "Grass"}, "Electric"),
-                new Question("Which Pokémon evolves into Charizard?", new String[]{"Squirtle", "Bulbasaur", "Charmander", "Pikachu"}, "Charmander"),
-                new Question("Which Pokémon is also known as the 'Shellfish Pokémon'?", new String[]{"Squirtle", "Slowpoke", "Cloyster", "Krabby"}, "Squirtle"),
-                new Question("Which Pokémon is known as the 'Fire Mouse'?", new String[]{"Pikachu", "Charmander", "Jigglypuff", "Cyndaquil"}, "Cyndaquil"),
-                new Question("What is the first Pokémon in the Pokédex?", new String[]{"Bulbasaur", "Pikachu", "Rattata", "Charmander"}, "Bulbasaur"),
-                new Question("What Pokémon type is effective against Ground type moves?", new String[]{"Electric", "Flying", "Water", "Grass"}, "Water"),
-                new Question("Which Pokémon has the Pokédex number 007?", new String[]{"Squirtle", "Charmander", "Bulbasaur", "Wartortle"}, "Squirtle"),
-                new Question("What is the final evolution of Eevee when exposed to a Water Stone?", new String[]{"Vaporeon", "Jolteon", "Flareon", "Espeon"}, "Vaporeon"),
-                new Question("Which Pokémon is the only one to have been designed by an American artist?", new String[]{"Pikachu", "Jynx", "Ditto", "Mew"}, "Jynx"),
-                new Question("What Pokémon is known as the 'Tiny Bird Pokémon'?", new String[]{"Pidgey", "Spearow", "Fearow", "Farfetch'd"}, "Pidgey")
+                new Question("What type is Pikachu?", new String[]{"Water", "Electric", "Fire", "Grass"}, 1),
+                new Question("Which Pokémon evolves into Charizard?", new String[]{"Squirtle", "Bulbasaur", "Charmander", "Pikachu"}, 2),
+                new Question("Which Pokémon is also known as the 'Shellfish Pokémon'?", new String[]{"Squirtle", "Slowpoke", "Cloyster", "Krabby"}, 0),
+                new Question("Which Pokémon is known as the 'Fire Mouse'?", new String[]{"Pikachu", "Charmander", "Jigglypuff", "Cyndaquil"}, 3),
+                new Question("What is the first Pokémon in the Pokédex?", new String[]{"Bulbasaur", "Pikachu", "Rattata", "Charmander"}, 1),
+                new Question("What Pokémon type is effective against Ground type moves?", new String[]{"Electric", "Flying", "Water", "Grass"}, 2),
+                new Question("Which Pokémon has the Pokédex number 007?", new String[]{"Squirtle", "Charmander", "Bulbasaur", "Wartortle"}, 0),
+                new Question("What is the final evolution of Eevee when exposed to a Water Stone?", new String[]{"Vaporeon", "Jolteon", "Flareon", "Espeon"}, 0),
+                new Question("Which Pokémon is the only one to have been designed by an American artist?", new String[]{"Pikachu", "Jynx", "Ditto", "Mew"}, 1),
+                new Question("What Pokémon is known as the 'Tiny Bird Pokémon'?", new String[]{"Pidgey", "Spearow", "Fearow", "Farfetch'd"}, 0)
         };
         this.currentQuestionIndex = 0;
         this.showAnswer = false;
@@ -46,8 +46,8 @@ public class TriviaState implements State {
         shuffleQuestions();
 
         try {
-            backgroundImage = ImageIO.read(new File("src/resources/images/Trivia.jpg"));
-            pokeballImage = ImageIO.read(new File("src/resources/images/pokemon-ball.png"));
+            backgroundImage = ImageIO.read(new File("res/images/Trivia.jpg"));
+            pokeballImage = ImageIO.read(new File("res/images/pokemon-ball.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -108,7 +108,7 @@ public class TriviaState implements State {
         }
 
         if (showAnswer) {
-            String answer = "Answer: " + questions[currentQuestionIndex].getCorrectAnswer();
+            String answer = "Answer: " + questions[currentQuestionIndex].getChoices()[questions[currentQuestionIndex].getCorrectAnswer()];
             int answerX = (width - fm.stringWidth(answer)) / 2;
             g.drawString(answer, answerX, choiceYStart + 2 * choiceSpacing + 50);
         } else {
@@ -119,25 +119,25 @@ public class TriviaState implements State {
     }
 
     public void moveUp() {
-        if (selectedChoiceIndex >= 2) {
+        if (selectedChoiceIndex == 2 || selectedChoiceIndex == 3) {
             selectedChoiceIndex -= 2;
         }
     }
 
     public void moveDown() {
-        if (selectedChoiceIndex + 2 < questions[currentQuestionIndex].getChoices().length) {
+        if (selectedChoiceIndex == 0 || selectedChoiceIndex == 1) {
             selectedChoiceIndex += 2;
         }
     }
 
     public void moveLeft() {
-        if (selectedChoiceIndex % 2 != 0) {
+        if (selectedChoiceIndex == 1 || selectedChoiceIndex == 3) {
             selectedChoiceIndex--;
         }
     }
 
     public void moveRight() {
-        if (selectedChoiceIndex % 2 == 0 && selectedChoiceIndex + 1 < questions[currentQuestionIndex].getChoices().length) {
+        if (selectedChoiceIndex == 0 || selectedChoiceIndex == 2) {
             selectedChoiceIndex++;
         }
     }

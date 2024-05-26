@@ -8,13 +8,14 @@ public class KeyInput extends KeyAdapter {
     private Render render;
     protected Sound sound = new Sound();
     private Game game;
+    private TriviaState trivia;
 
     public KeyInput(Render render, Game game) {
         this.render = render;
         this.game = game;
 
         //start music
-        sound.playMusic("src/resources/bgm/title-screen-bgm.wav");
+        sound.playMusic("res/bgm/title-screen-bgm.wav");
 
     }
 
@@ -24,12 +25,32 @@ public class KeyInput extends KeyAdapter {
         if (key == KeyEvent.VK_ENTER) {
             // Access gameState, titleState, and selectionState through getter methods
             if (game.getCurrentScreen() == game.TITLE) {
-                game.setCurrentScreen(game.SELECTION);
+                if (game.getTitleState().getMenuOpened()) {
+                    if (game.getTitleState().getMenuSelector() == game.getTitleState().NEW_GAME) {
+                        game.getTriviaState().setDisabled(false);
+                        game.setCurrentScreen(game.SELECTION); // starts a new game
+                    }
+                    else if (game.getTitleState().getMenuSelector() == game.getTitleState().CONTINUE && game.getSaved() != null) {
+                        game.setBattleState(new BattleState());
+                        game.getBattleState().setSelectedPokemon(game.getSaved().getPlayer().getPokemonID());
+                        game.getBattleState().setChosenPokemon(game.getSaved().getPlayer());
+                        game.getBattleState().setEnemyPokemon(game.getSaved().getEnemy());
+                        game.getTriviaState().setDisabled(game.getSaved().getTriviaMode());
+                        game.setCurrentScreen(game.BATTLE);
+                        sound.playMusic("res/bgm/battle-bgm.wav");
+                    }
+                    else if (game.getTitleState().getMenuSelector() == game.getTitleState().EXIT) {
+                        System.exit(0); // exits the game
+                    }
+                    game.getTitleState().setMenuOpened(false);
+                } else {
+                    game.getTitleState().setMenuOpened(true);
+                }
             }
             else if (game.getCurrentScreen() == game.SELECTION) {
                 game.setBattleState(new BattleState(game.getSelectionState().selector));
                 game.setCurrentScreen(game.BATTLE);
-                sound.playMusic("src/resources/bgm/battle-bgm.wav");
+                sound.playMusic("res/bgm/battle-bgm.wav");
             }
             else if (game.getCurrentScreen() == game.BATTLE) {
                 Pokemon player = game.getBattleState().getChosenPokemon();
@@ -56,9 +77,17 @@ public class KeyInput extends KeyAdapter {
                         }
                     }
                     else if (game.getBattleState().getActionSelector() == 2) {
-                        game.setCurrentScreen(game.TITLE);
-                        sound.playMusic("src/resources/bgm/title-screen-bgm.wav");
+                        game.setSaved(new Progress(player, enemy, trivia.isDisabled()));
+                        game.getBattleState().setSaveMode(true);
                     }
+                    else if (game.getBattleState().getActionSelector() == 3) {
+                        game.setCurrentScreen(game.TITLE);
+                        sound.playMusic("res/bgm/title-screen-bgm.wav");
+                    }
+                }
+                else if (game.getBattleState().getSaveMode()) {
+                    game.getBattleState().setSaveMode(false);
+                    game.getBattleState().setActionSelectionMode(true);
                 }
                 else if (game.getBattleState().getFightMode()) {
                     if (player.getCurrentPp() >= currPlayerMove.getPp()) {
@@ -74,7 +103,7 @@ public class KeyInput extends KeyAdapter {
                     game.getBattleState().setCommentMode(false);
                     if (enemy.getCurrentHp() <= 0) {
                         game.getBattleState().setFaintedMode(true);
-                        sound.playMusic("src/resources/bgm/victory-theme.wav");
+                        sound.playMusic("res/bgm/victory-theme.wav");
                     } else {
                         game.getBattleState().setEnemyTurn(true);
                         game.getBattleState().getRandomMove();
@@ -94,7 +123,7 @@ public class KeyInput extends KeyAdapter {
 
                     if (player.getCurrentHp() <= 0) {
                         game.getBattleState().setFaintedMode(true);
-                        sound.playMusicOnce("src/resources/bgm/defeat-theme.wav");
+                        sound.playMusicOnce("res/bgm/defeat-theme.wav");
                     }
                     else {
                          game.getBattleState().setActionSelectionMode(true);
@@ -108,27 +137,37 @@ public class KeyInput extends KeyAdapter {
             }
             else if (game.getCurrentScreen() == game.WINNER) {
                 game.setCurrentScreen(game.TITLE);
-                sound.playMusic("src/resources/bgm/title-screen-bgm.wav");
+                sound.playMusic("res/bgm/title-screen-bgm.wav");
             }
             else if (game.getCurrentScreen() == game.TRIVIA) {
-                TriviaState trivia = game.getTriviaState();
+                trivia = game.getTriviaState();
                 if (trivia.isAnsweredMode()) {
                     game.setCurrentScreen(game.BATTLE);
                     game.getBattleState().setActionSelectionMode(true);
                     trivia.setShowAnswer(false);
                     trivia.setAnsweredMode(false);
                 } else {
-                    String selectedAnswer = trivia.getQuestions()[trivia.getSelectedChoiceIndex()].getCorrectAnswer();
-                    String answer = trivia.getQuestions()[trivia.getCurrentQuestionIndex()].getCorrectAnswer();
+                    int selectedAnswer = trivia.getSelectedChoiceIndex();
+                    int answer = trivia.getQuestions()[trivia.getCurrentQuestionIndex()].getCorrectAnswer();
                     trivia.setAnsweredMode(true);
                     trivia.setShowAnswer(true);
-                    if (selectedAnswer.equals(answer)) {
+                    if (selectedAnswer == answer) {
                         Pokemon pokemon = game.getBattleState().getChosenPokemon();
                         pokemon.setExp(pokemon.getExp() + 500); // adds 500 exp points if trivia answered correctly
                         pokemon.setLevel(pokemon.getLevel() + 1); // levels up pokemon
                         pokemon.updateMoves();
                     }
                 }
+            }
+        }
+        if (game.getCurrentScreen() == game.TITLE) {
+            int currMenuSelector = game.getTitleState().getMenuSelector();
+            if (key == KeyEvent.VK_DOWN && currMenuSelector < 2) {
+                game.getTitleState().setMenuSelector(currMenuSelector + 1);
+            }
+
+            if (key == KeyEvent.VK_UP && currMenuSelector > 0) {
+                game.getTitleState().setMenuSelector(currMenuSelector - 1);
             }
         }
         if (game.getCurrentScreen() == game.SELECTION) {
@@ -153,24 +192,24 @@ public class KeyInput extends KeyAdapter {
 
             if (currActionSelectionMode) {
                 if (key == KeyEvent.VK_LEFT) {
-                    if (currActionSelector > 0) {
+                    if (currActionSelector == 1 || currActionSelector == 3) {
                         game.getBattleState().setActionSelector(currActionSelector - 1);
                     }
                 }
                 if (key == KeyEvent.VK_RIGHT) {
-                    if (currActionSelector < 1) {
+                    if (currActionSelector == 0 || currActionSelector == 2) {
                         game.getBattleState().setActionSelector(currActionSelector + 1);
                     }
                 }
                 if (key == KeyEvent.VK_DOWN) {
-                    if (currActionSelector <= 1 && currActionSelector >= 0) {
-                        game.getBattleState().setActionSelector(2);
+                    if (currActionSelector == 0 || currActionSelector == 1) {
+                        game.getBattleState().setActionSelector(currActionSelector + 2);
                     }
                 }
 
                 if (key == KeyEvent.VK_UP) {
-                    if (currActionSelector == 2) {
-                        game.getBattleState().setActionSelector(0);
+                    if (currActionSelector == 2 || currActionSelector == 3) {
+                        game.getBattleState().setActionSelector(currActionSelector - 2);
                     }
                 }
             }
@@ -216,7 +255,7 @@ public class KeyInput extends KeyAdapter {
 
 
 
-        sound.playSoundEffect("src/resources/bgm/button-sound-effect.wav");
+        sound.playSoundEffect("res/bgm/button-sound-effect.wav");
     }
 
 

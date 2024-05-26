@@ -3,6 +3,7 @@ package game;
 import java.awt.image.BufferedImage;
 
 public class Pokemon {
+    private int pokemonID;
     private String pokemonName;
 
     // default stats
@@ -111,6 +112,14 @@ public class Pokemon {
 
     public void setLevel(int level) {
         this.level = level;
+    }
+
+    public int getPokemonID() {
+        return pokemonID;
+    }
+
+    public void setPokemonID(int pokemonID) {
+        this.pokemonID = pokemonID;
     }
 
     public int getExp() {

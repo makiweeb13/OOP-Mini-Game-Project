@@ -24,7 +24,7 @@ public class WinnerState implements State {
     public void render(Graphics g, int width, int height) {
         try {
             if (backgroundImage == null) {
-                backgroundImage = ImageIO.read(new File("src/resources/images/winner.jpg"));
+                backgroundImage = ImageIO.read(new File("res/images/winner.jpg"));
             }
         } catch(IOException e) {
             e.printStackTrace();

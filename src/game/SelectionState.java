@@ -38,12 +38,12 @@ public class SelectionState implements State {
     public void render(Graphics g, int width, int height) {
         try {
 
-            backgroundImage = ImageIO.read(new File("src/resources/images/background2.jpg"));
-            logoImage = ImageIO.read(new File("src/resources/images/Logo.png"));
-            bulba = ImageIO.read(new File("src/resources/images/BALBAUSAUR.png"));
-            chari = ImageIO.read(new File("src/resources/images/CHARMANDER.png"));
-            torto = ImageIO.read(new File("src/resources/images/SQUIRTLE.png"));
-            pokemonBall = ImageIO.read(new File("src/resources/images/pokemon-ball.png"));
+            backgroundImage = ImageIO.read(new File("res/images/background2.jpg"));
+            logoImage = ImageIO.read(new File("res/images/Logo.png"));
+            bulba = ImageIO.read(new File("res/images/BALBAUSAUR.png"));
+            chari = ImageIO.read(new File("res/images/CHARMANDER.png"));
+            torto = ImageIO.read(new File("res/images/SQUIRTLE.png"));
+            pokemonBall = ImageIO.read(new File("res/images/pokemon-ball.png"));
         } catch(IOException e) {
             e.printStackTrace();
         }
@@ -53,10 +53,10 @@ public class SelectionState implements State {
         long currentTime = System.currentTimeMillis();
         long elapsedTime = currentTime - lastTime;
 
-        Font font = new Font(Font.MONOSPACED, Font.BOLD, 40);
+        Font font = new Font(Font.MONOSPACED, Font.BOLD, 50);
         g.setFont(font);
-        g.setColor(Color.black);
-        String text = "Choose your";
+        g.setColor(Color.BLACK);
+        String text = "CHOOSE YOUR";
         int textX = ((width - g.getFontMetrics().stringWidth(text)) / 2) - 90;
         int textY = 60;
 
