@@ -144,8 +144,10 @@ public class Pokemon {
         }
         this.currentPp -= move.getPp();
         this.exp += move.getExpPoints();
+        updateMoves();
+    }
+    public void updateMoves() {
         this.currentLvl = (this.exp / 500) + 1;
-
         // level up once player obtained enough exp
         if (this.currentLvl > this.level) {
             setLevel(getLevel() + 1);
@@ -154,8 +156,6 @@ public class Pokemon {
         // enable moves unlocked by current level
         for (int i = 1; i < this.currentLvl && i < 4; i++) {
             moves[i].setDisabled(false);
-            System.out.println(moves[i].isDisabled());
-
         }
     }
 }

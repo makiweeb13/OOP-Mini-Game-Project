@@ -126,6 +126,7 @@ public class KeyInput extends KeyAdapter {
                         Pokemon pokemon = game.getBattleState().getChosenPokemon();
                         pokemon.setExp(pokemon.getExp() + 500); // adds 500 exp points if trivia answered correctly
                         pokemon.setLevel(pokemon.getLevel() + 1); // levels up pokemon
+                        pokemon.updateMoves();
                     }
                 }
             }
