@@ -69,6 +69,26 @@ public class BattleState implements State {
         enemyPokemon.addMove(new Move("Screech", "atkBuff", 50, 2, 200));
         enemyPokemon.addMove(new Move("Absorb", "atk", 100, 3, 300));
         enemyPokemon.addMove(new Move("Mean Look", "defDeBuff", 50, 2, 500));
+
+        try {
+            backgroundImage = ImageIO.read(new File("res/images/pokemon-battle-template.png"));
+            pokemonBall = ImageIO.read(new File("res/images/pokemon-ball.png"));
+            enemyPokemon.setSpriteFront(ImageIO.read(new File("res/images/zubat-front.png")));
+            if (selectedPokemon == 0) {
+                chosenPokemon.setSpriteFront(ImageIO.read(new File("res/images/balbausaur-front.png")));
+                chosenPokemon.setSpriteBack(ImageIO.read(new File("res/images/balbausaur-back.png")));
+            }
+            else if (selectedPokemon == 1) {
+                chosenPokemon.setSpriteFront(ImageIO.read(new File("res/images/squirtle-front.png")));
+                chosenPokemon.setSpriteBack(ImageIO.read(new File("res/images/squirtle-back.png")));
+            }
+            else if (selectedPokemon == 2) {
+                chosenPokemon.setSpriteFront(ImageIO.read(new File("res/images/charmander-front.png")));
+                chosenPokemon.setSpriteBack(ImageIO.read(new File("res/images/charmander-back.png")));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public BattleState() {
@@ -81,6 +101,12 @@ public class BattleState implements State {
         this.faintedMode = false;
         this.disabledTriviaMode = false;
         this.saveMode = false;
+        try {
+            backgroundImage = ImageIO.read(new File("res/images/pokemon-battle-template.png"));
+            pokemonBall = ImageIO.read(new File("res/images/pokemon-ball.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public int getActionSelector() {
@@ -184,25 +210,6 @@ public class BattleState implements State {
     }
 
     public void render(Graphics g, int width, int height) {
-        try {
-            backgroundImage = ImageIO.read(new File("res/images/pokemon-battle-template.png"));
-            pokemonBall = ImageIO.read(new File("res/images/pokemon-ball.png"));
-            enemyPokemon.setSpriteFront(ImageIO.read(new File("res/images/zubat-front.png")));
-            if (selectedPokemon == 0) {
-                chosenPokemon.setSpriteFront(ImageIO.read(new File("res/images/balbausaur-front.png")));
-                chosenPokemon.setSpriteBack(ImageIO.read(new File("res/images/balbausaur-back.png")));
-            }
-            else if (selectedPokemon == 1) {
-                chosenPokemon.setSpriteFront(ImageIO.read(new File("res/images/squirtle-front.png")));
-                chosenPokemon.setSpriteBack(ImageIO.read(new File("res/images/squirtle-back.png")));
-            }
-            else if (selectedPokemon == 2) {
-                chosenPokemon.setSpriteFront(ImageIO.read(new File("res/images/charmander-front.png")));
-                chosenPokemon.setSpriteBack(ImageIO.read(new File("res/images/charmander-back.png")));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         g.drawImage(backgroundImage, 0, 0, width, height, null);
 
         Font stat = new Font(Font.MONOSPACED, Font.BOLD, 35);

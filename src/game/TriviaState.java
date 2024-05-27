@@ -1,7 +1,6 @@
 package game;
 
 import java.util.Random;
-import java.util.Arrays;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -12,7 +11,6 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class TriviaState implements State {
-    private Game game;
     private Question[] questions;
     private int currentQuestionIndex;
     private boolean showAnswer;
@@ -24,8 +22,7 @@ public class TriviaState implements State {
     private boolean answeredMode;
     private boolean disabled; // disables trivia after being used once
 
-    public TriviaState(Game game) {
-        this.game = game;
+    public TriviaState() {
         this.questions = new Question[]{
                 new Question("What type is Pikachu?", new String[]{"Water", "Electric", "Fire", "Grass"}, 1),
                 new Question("Which Pokémon evolves into Charizard?", new String[]{"Squirtle", "Bulbasaur", "Charmander", "Pikachu"}, 2),
@@ -53,7 +50,7 @@ public class TriviaState implements State {
         }
     }
 
-    private void shuffleQuestions() {
+    public void shuffleQuestions() {
         Random random = new Random();
         for (int i = questions.length - 1; i > 0; i--) {
             int index = random.nextInt(i + 1);

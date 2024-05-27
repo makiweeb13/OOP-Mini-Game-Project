@@ -20,17 +20,11 @@ public class TitleState implements State {
     protected final int EXIT = 2;
     private int menuSelector;
 
-    public TitleState(BufferedImage backgroundImage, BufferedImage startImage, boolean showStartImage) {
-        this.backgroundImage = backgroundImage;
-        this.startImage = startImage;
-        this.showStartImage = showStartImage;
+    public TitleState() {
+        this.showStartImage = true;
         this.lastTime = System.currentTimeMillis();
         this.menuOpened = false;
         this.menuSelector = NEW_GAME;
-    }
-
-    public void render(Graphics g, int width, int height) {
-
         try {
             backgroundImage = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/images/background1.jpg")));
             startImage = ImageIO.read(new File("res/images/Start.png"));
@@ -38,6 +32,10 @@ public class TitleState implements State {
         } catch(IOException e) {
             e.printStackTrace();
         }
+
+    }
+
+    public void render(Graphics g, int width, int height) {
         g.drawImage(backgroundImage, 0, 0, width, height, null);
 
         // Calculate the time elapsed since the last blink

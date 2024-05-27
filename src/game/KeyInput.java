@@ -8,19 +8,15 @@ public class KeyInput extends KeyAdapter {
     private Render render;
     protected Sound sound = new Sound();
     private Game game;
-    private TriviaState trivia;
 
     public KeyInput(Render render, Game game) {
         this.render = render;
         this.game = game;
-
         //start music
         sound.playMusic("res/bgm/title-screen-bgm.wav");
-
     }
 
     public void keyPressed(KeyEvent e) {
-
         int key = e.getKeyCode();
         if (key == KeyEvent.VK_ENTER) {
             // Access gameState, titleState, and selectionState through getter methods
@@ -28,6 +24,7 @@ public class KeyInput extends KeyAdapter {
                 if (game.getTitleState().getMenuOpened()) {
                     if (game.getTitleState().getMenuSelector() == game.getTitleState().NEW_GAME) {
                         game.getTriviaState().setDisabled(false);
+                        //game.getTriviaState().shuffleQuestions();
                         game.setCurrentScreen(game.SELECTION); // starts a new game
                     }
                     else if (game.getTitleState().getMenuSelector() == game.getTitleState().CONTINUE && game.getSaved() != null) {
@@ -36,6 +33,7 @@ public class KeyInput extends KeyAdapter {
                         game.getBattleState().setChosenPokemon(game.getSaved().getPlayer());
                         game.getBattleState().setEnemyPokemon(game.getSaved().getEnemy());
                         game.getTriviaState().setDisabled(game.getSaved().getTriviaMode());
+                        game.getTriviaState().shuffleQuestions();
                         game.setCurrentScreen(game.BATTLE);
                         sound.playMusic("res/bgm/battle-bgm.wav");
                     }
@@ -77,7 +75,7 @@ public class KeyInput extends KeyAdapter {
                         }
                     }
                     else if (game.getBattleState().getActionSelector() == 2) {
-                        game.setSaved(new Progress(player, enemy, trivia.isDisabled()));
+                        game.setSaved(new Progress(player, enemy, game.getTriviaState().isDisabled()));
                         game.getBattleState().setSaveMode(true);
                     }
                     else if (game.getBattleState().getActionSelector() == 3) {
@@ -140,17 +138,16 @@ public class KeyInput extends KeyAdapter {
                 sound.playMusic("res/bgm/title-screen-bgm.wav");
             }
             else if (game.getCurrentScreen() == game.TRIVIA) {
-                trivia = game.getTriviaState();
-                if (trivia.isAnsweredMode()) {
+                if (game.getTriviaState().isAnsweredMode()) {
                     game.setCurrentScreen(game.BATTLE);
                     game.getBattleState().setActionSelectionMode(true);
-                    trivia.setShowAnswer(false);
-                    trivia.setAnsweredMode(false);
+                    game.getTriviaState().setShowAnswer(false);
+                    game.getTriviaState().setAnsweredMode(false);
                 } else {
-                    int selectedAnswer = trivia.getSelectedChoiceIndex();
-                    int answer = trivia.getQuestions()[trivia.getCurrentQuestionIndex()].getCorrectAnswer();
-                    trivia.setAnsweredMode(true);
-                    trivia.setShowAnswer(true);
+                    int selectedAnswer = game.getTriviaState().getSelectedChoiceIndex();
+                    int answer = game.getTriviaState().getQuestions()[game.getTriviaState().getCurrentQuestionIndex()].getCorrectAnswer();
+                    game.getTriviaState().setAnsweredMode(true);
+                    game.getTriviaState().setShowAnswer(true);
                     if (selectedAnswer == answer) {
                         Pokemon pokemon = game.getBattleState().getChosenPokemon();
                         pokemon.setExp(pokemon.getExp() + 500); // adds 500 exp points if trivia answered correctly
@@ -251,10 +248,6 @@ public class KeyInput extends KeyAdapter {
                 triviaState.moveRight();
             }
         }
-
-
-
-
         sound.playSoundEffect("res/bgm/button-sound-effect.wav");
     }
 

@@ -12,16 +12,8 @@ public class WinnerState implements State {
     private boolean showText = true;
     private long lastToggleTime;
 
-    public WinnerState(BufferedImage backgroundImage) {
-        this.backgroundImage = backgroundImage;
+    public WinnerState() {
         lastToggleTime = System.currentTimeMillis();
-    }
-
-    public void setWinner(Pokemon winner) {
-        this.winner = winner;
-    }
-
-    public void render(Graphics g, int width, int height) {
         try {
             if (backgroundImage == null) {
                 backgroundImage = ImageIO.read(new File("res/images/winner.jpg"));
@@ -29,6 +21,13 @@ public class WinnerState implements State {
         } catch(IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setWinner(Pokemon winner) {
+        this.winner = winner;
+    }
+
+    public void render(Graphics g, int width, int height) {
         g.drawImage(backgroundImage, 0, 0, width, height, null);
 
         Font font = new Font(Font.MONOSPACED, Font.BOLD, 60);

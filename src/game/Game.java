@@ -8,11 +8,6 @@ public class Game extends Canvas implements Runnable {
     private Thread thread;
     private boolean running = false;
     private Render render;
-    private BufferedImage backgroundImage;
-    private BufferedImage backgroundImage2;
-    private BufferedImage logoImage;
-    private BufferedImage startImage;
-    private boolean showStartImage = true;
     private TitleState titleState;
     private SelectionState selectionState;
     private BattleState battleState;
@@ -32,10 +27,9 @@ public class Game extends Canvas implements Runnable {
 
         new Window("POKEMON: Defeat Zubat!", this);
 
-        titleState = new TitleState(backgroundImage, startImage, true);
-        selectionState = new SelectionState(backgroundImage2, logoImage);
-        winnerState = new WinnerState(backgroundImage);
-        triviaState = new TriviaState(this); // Initialized TriviaState
+        selectionState = new SelectionState();
+        winnerState = new WinnerState();
+        triviaState = new TriviaState(); // Initialized TriviaState
     }
 
     // Getter method for
@@ -68,8 +62,8 @@ public class Game extends Canvas implements Runnable {
     }
 
     public synchronized void start(){
-        //gameState = titleState;
         currentScreen = TITLE;
+        titleState = new TitleState();
         thread = new Thread(this);
         thread.start();
         running = true;
@@ -139,20 +133,12 @@ public class Game extends Canvas implements Runnable {
             triviaState.render(g, getWidth(), getHeight()); // Render triviaState
         }
 
-        // Toggle the visibility of the start image every half second
-        try {
-            Thread.sleep(500); // Sleep for 500 milliseconds (half second)
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        showStartImage = !showStartImage; // Toggle the visibility
-
         render.render(g);
         bs.show();
         g.dispose();
     }
 
     public static void main(String[] args){
-        new Game().start();
+        new Game();
     }
 }
