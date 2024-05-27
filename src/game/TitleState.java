@@ -32,7 +32,7 @@ public class TitleState implements State {
     public void render(Graphics g, int width, int height) {
 
         try {
-            backgroundImage = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/images/background1.jpg")));
+            backgroundImage = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("res/images/background1.jpg")));
             startImage = ImageIO.read(new File("res/images/Start.png"));
             pokeball = ImageIO.read(new File("res/images/pokemon-ball.png"));
         } catch(IOException e) {
